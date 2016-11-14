@@ -36,9 +36,7 @@ class OurKeyListener implements KeyListener{
 class ourKeyListenerIP implements KeyListener{
 	@Override
 	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-		
+		// TODO Auto-generated method stub		
 		
 		if(e.getKeyChar() >= KeyEvent.VK_0 && e.getKeyChar() <= KeyEvent.VK_9){
 			

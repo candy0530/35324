@@ -11,50 +11,50 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 
 public class TCPServer implements Runnable{	
-	//¦s¨C­ÓclientªºID
+	//å­˜æ¯å€‹clientçš„ID
 	private Hashtable clientIDList =new Hashtable();
-	//¦s¨C­Óclinetªºoutstream
+	//å­˜æ¯å€‹clinetçš„outstream
 	private Hashtable clientOutsteamList =new Hashtable();
 	private final int port =35324;
 	private ServerSocket serverSock;
 	private Socket clientSocket;
 	
-	//«Ø¥ßServer
+	//å»ºç«‹Server
 	public TCPServer() {
 		try {
 			serverSock = new ServerSocket(port);
-			//¶}±Ò°õ¦æºü
+			//é–‹å•ŸåŸ·è¡Œç·’
 			new Thread(this).start();
 		}		catch (Exception ex) {
-			System.out.println("Server«Ø¥ß¥¢±Ñ");
+			System.out.println("Serverå»ºç«‹å¤±æ•—");
 		}
 		
 	}	
-	//°õ¦æ°õ¦æºü
+	//åŸ·è¡ŒåŸ·è¡Œç·’
 	public void run() {
 		
 		while (true) {
 			try{
-				// µ¥«İ³s½uªº½Ğ¨D--¦ê¬y
+				// ç­‰å¾…é€£ç·šçš„è«‹æ±‚--ä¸²æµ
 				clientSocket = serverSock.accept();
 						
 				PrintStream writer = new PrintStream(clientSocket.getOutputStream());
-				//¦s¨C­Óclinetªºoutstream
+				//å­˜æ¯å€‹clinetçš„outstream
 				clientOutsteamList.put(clientSocket,writer);
-				// «Ø¥ß»PclientI/O°õ¦æºü
+				// å»ºç«‹èˆ‡clientI/OåŸ·è¡Œç·’
 				Thread listenRequest = new Thread(new Process());
-				// ±Ò°Ê°õ¦æºü
+				// å•Ÿå‹•åŸ·è¡Œç·’
 				listenRequest.start();
 				
 			}catch (Exception ex) {
-				//System.out.println("Client­n¨D³s±µ¥¢±Ñ");
+				//System.out.println("Clientè¦æ±‚é€£æ¥å¤±æ•—");
 			}
 		}
 	}
 	
 	public void endConnection() {
 		try {
-			// µ²§ô³s½u			
+			// çµæŸé€£ç·š			
 							
 			//System.out.println("End Connect");
 			for(Enumeration<PrintStream> one =clientOutsteamList.elements();one.hasMoreElements();)
@@ -63,19 +63,19 @@ public class TCPServer implements Runnable{
 				try{
 					((PrintStream)one.nextElement()).close();					
 									
-					System.out.println("ServerÃö³¬clintStream");
+					System.out.println("Serveré—œé–‰clintStream");
 				}catch (Exception ex) {
-					System.out.println("Ãö³¬clint¥¢±Ñ: " );//+ ((Socket)one).getRemoteSocketAddress());
+					System.out.println("é—œé–‰clintå¤±æ•—: " );//+ ((Socket)one).getRemoteSocketAddress());
 				}		
 				clientOutsteamList.remove(one);
 				//one.nextElement();							
 			}
 			serverSock.close();
 		} catch (IOException ex) {
-			System.out.println("µ²§ô³s½u¥¢±Ñ");
+			System.out.println("çµæŸé€£ç·šå¤±æ•—");
 		}
 	}
-	//»Pclient¶Ç¿é«H®§ªº°õ¦æºü	
+	//èˆ‡clientå‚³è¼¸ä¿¡æ¯çš„åŸ·è¡Œç·’	
 	public class Process implements Runnable {
 		InputStreamReader TCPReader;
 		
@@ -83,21 +83,21 @@ public class TCPServer implements Runnable{
 			
 			String getLine;
 			try {
-				// ¨ú±oSocketªº¿é¤J¸ê®Æ¬y
+				// å–å¾—Socketçš„è¼¸å…¥è³‡æ–™æµ
 				TCPReader = new InputStreamReader(clientSocket.getInputStream());
-				// ¼È¦s¸ê®ÆªºBuffered
+				// æš«å­˜è³‡æ–™çš„Buffered
 				BufferedReader reader = new BufferedReader(TCPReader);
 				PrintStream writer = (PrintStream)clientOutsteamList.get(clientSocket);
 				
-				// Åª¨ú¸ê®Æ
+				// è®€å–è³‡æ–™
 				while ((getLine = reader.readLine()) != null) {
 					//System.out.println(getLine);
-					//--³B²zinput
+					//--è™•ç†input
 					String[] clientText = getLine.split("#");
-					//--client¶i¤Jµ¥­Ô«Ç ¬ö¿ı¨äID¥B¶Çª±®a¦Cªíµ¹©Ò¦³client
+					//--clienté€²å…¥ç­‰å€™å®¤ ç´€éŒ„å…¶IDä¸”å‚³ç©å®¶åˆ—è¡¨çµ¦æ‰€æœ‰client
 					if(clientText[0].equals("ID")){
 						clientIDList.put(clientSocket, clientText[1]);
-						//¶Ç°eª±®a¦Cªí
+						//å‚³é€ç©å®¶åˆ—è¡¨
 						String message = "List#";						
 						for(Enumeration one =clientIDList.elements();one.hasMoreElements();)
 						{
@@ -106,7 +106,7 @@ public class TCPServer implements Runnable{
 						respondAll(message);
 					}
 					else if(clientText[0].equals("EndGame")){
-						//³B²zoutput
+						//è™•ç†output
 						clientIDList.remove(clientSocket);
 						clientOutsteamList.remove(clientSocket);
 						String message = "List#";						
@@ -114,57 +114,57 @@ public class TCPServer implements Runnable{
 						{
 							message += (String)one.nextElement()+"#";							
 						}
-						//¦^¶Ç«H®§µ¹Client
+						//å›å‚³ä¿¡æ¯çµ¦Client
 						respondAll(message);
 					}
-					//--·í¥«ªø¶}©l¹CÀ¸¡A³qª¾©Ò¦³clinet¶}©l¹CÀ¸
+					//--ç•¶å¸‚é•·é–‹å§‹éŠæˆ²ï¼Œé€šçŸ¥æ‰€æœ‰clineté–‹å§‹éŠæˆ²
 					else if(clientText[0].equals("StartGame")){
-						//³B²zoutput
+						//è™•ç†output
 						String message = "StartGame#";
-						//¦^¶Ç«H®§µ¹ALL
+						//å›å‚³ä¿¡æ¯çµ¦ALL
 						respondAll(message);
 					}				
 					
 					
 				}
 			} catch (Exception ex) {
-				//System.out.println("³s±µÂ÷¶}: "+clientSocket.getRemoteSocketAddress() );
+				//System.out.println("é€£æ¥é›¢é–‹: "+clientSocket.getRemoteSocketAddress() );
 			}
 			finally{
 				
-				//²¾°£clientªºID.IP
+				//ç§»é™¤clientçš„ID.IP
 				synchronized(clientIDList){
 					if(clientIDList.containsKey(clientSocket))
 						clientIDList.remove(clientSocket);	
 				}				
 				synchronized(clientOutsteamList){
-					System.out.println("³s±µÂ÷¶}: "+clientSocket.getRemoteSocketAddress() );
+					System.out.println("é€£æ¥é›¢é–‹: "+clientSocket.getRemoteSocketAddress() );
 					if(clientOutsteamList.containsKey(clientSocket))
 						clientOutsteamList.remove(clientSocket);
 					try{
 						clientSocket.close();
-						System.out.println("ServerÃö³¬clint¦¨¥\");
+						System.out.println("Serveré—œé–‰clintæˆåŠŸ");
 					}catch (Exception ex) {
-						System.out.println("Ãö³¬clint¥¢±Ñ: " + clientSocket.getRemoteSocketAddress());
+						System.out.println("é—œé–‰clintå¤±æ•—: " + clientSocket.getRemoteSocketAddress());
 					}
 				}
 				
 			}
 		}
-		//server¦^¶Ç¸ê®Æµ¹¥»client
+		//serverå›å‚³è³‡æ–™çµ¦æœ¬client
 		private void respondClient(PrintStream writer , String outputMessage) {			
 			try {				
 				
 				
 				writer.println(outputMessage);
-				// ¨ê·s¸Ó¦ê¬yªº½w½Ä¡C
+				// åˆ·æ–°è©²ä¸²æµçš„ç·©è¡ã€‚
 				writer.flush();
 			} catch (Exception ex) {
-				System.out.println("°e¥X¸ê®Æ¥¢±Ñ: "+ clientSocket.getRemoteSocketAddress());
+				System.out.println("é€å‡ºè³‡æ–™å¤±æ•—: "+ clientSocket.getRemoteSocketAddress());
 			}
 		
 		}
-		//¶Ç¸ê®Æµ¹©Ò¦³client
+		//å‚³è³‡æ–™çµ¦æ‰€æœ‰client
 		private void respondAll(String outputMessage) {	
 			
 			synchronized(clientOutsteamList){

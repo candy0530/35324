@@ -1,5 +1,6 @@
 package burgerking;
 
+import java.awt.Dialog;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,13 +20,13 @@ public class IPView extends JPanel{
         setSize(800,600);
         setLayout(null);     	
         
-    	JLabel app_name = new JLabel("º~ ³ù ¯« °½ ¤ı");       
+    	JLabel app_name = new JLabel("æ¼¢ å ¡ ç¥ å· ç‹");       
     	app_name.setLocation(170, 30);    	
     	app_name.setSize(460,100);
-    	app_name.setFont(new Font("¼Ğ·¢Åé", Font.BOLD, 60));
+    	app_name.setFont(new Font("æ¨™æ¥·é«”", Font.BOLD, 60));
     	add(app_name);
     	
-    	JLabel lobby_Ip_label = new JLabel("¹CÀ¸¢×¢Ş");       
+    	JLabel lobby_Ip_label = new JLabel("éŠæˆ²ï¼©ï¼°");       
     	lobby_Ip_label.setLocation(300, 150);
     	lobby_Ip_label.setSize(70,100);    	
 		add(lobby_Ip_label); 
@@ -44,12 +45,14 @@ public class IPView extends JPanel{
 			public void actionPerformed(ActionEvent e) {
 				int x = (int)main_frame.getLocation().getX();
 				int y = (int)main_frame.getLocation().getY();
-				GameRule GR = new GameRule(x,y);
+				//YourDialog GR = new YourDialog();
+				GameRule gameRule = new GameRule(x,y,main_frame);
+
 			}
 		});
         add(GameRule);
         
-        JButton confirm = new JButton("½T»{");
+        JButton confirm = new JButton("ç¢ºèª");
 		confirm.setBounds(300,250,200,100);
 		confirm.setVisible(true);
 		confirm.addActionListener(new ActionListener() {			
@@ -66,13 +69,13 @@ public class IPView extends JPanel{
 					}            		
 				} catch (Exception e) {
 					 System.out.println("Exception ok");
-					 JOptionPane.showMessageDialog(null, "­n¿é¤J¹CÀ¸¦ì¸m³á", "·ÅÄÉ´£¿ô@@?", JOptionPane.INFORMATION_MESSAGE);
+					 JOptionPane.showMessageDialog(null, "è¦è¼¸å…¥éŠæˆ²ä½ç½®å–”", "æº«é¦¨æé†’@@?", JOptionPane.INFORMATION_MESSAGE);
 				}                
               } 
             }); 
     	add(confirm);
     	
-    	JButton cancel = new JButton("¨ú®ø");
+    	JButton cancel = new JButton("å–æ¶ˆ");
     	cancel.setBounds(300,400,200,100);
     	cancel.setVisible(true);
     	cancel.addActionListener(new ActionListener() {			

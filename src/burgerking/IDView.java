@@ -1,14 +1,17 @@
 package burgerking;
 
+import java.awt.Dialog;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.WindowConstants;
 
 public class IDView extends JPanel{
 	MainFrame main_frame;
@@ -19,13 +22,13 @@ public class IDView extends JPanel{
         setSize(800,600);
         setLayout(null); 
         
-    	JLabel app_name = new JLabel("º~ ³ù ¯« °½ ¤ı");       
+    	JLabel app_name = new JLabel("æ¼¢ å ¡ ç¥ å· ç‹");       
     	app_name.setLocation(170, 30);    	
     	app_name.setSize(460,100);
-    	app_name.setFont(new Font("¼Ğ·¢Åé", Font.BOLD, 60));
+    	app_name.setFont(new Font("æ¨™æ¥·é«”", Font.BOLD, 60));
     	add(app_name);
     	
-    	JLabel user_ID_label = new JLabel("¹CÀ¸¼ÊºÙ");       
+    	JLabel user_ID_label = new JLabel("éŠæˆ²æš±ç¨±");       
     	user_ID_label.setLocation(300, 150);
     	user_ID_label.setSize(70,100);
 		add(user_ID_label); 
@@ -44,12 +47,13 @@ public class IDView extends JPanel{
 			public void actionPerformed(ActionEvent e) {
 				int x = (int)main_frame.getLocation().getX();
 				int y = (int)main_frame.getLocation().getY();
-				GameRule GR = new GameRule(x,y);
+				GameRule gameRule = new GameRule(x,y,main_frame);
 			}
+
 		});
         add(GameRule);
         
-        JButton NewGame = new JButton("¶}·s¹CÀ¸");
+        JButton NewGame = new JButton("é–‹æ–°éŠæˆ²");
     	NewGame.setBounds(300,250,200,100);
     	NewGame.setVisible(true);
     	NewGame.addActionListener(new ActionListener() {			
@@ -67,14 +71,15 @@ public class IDView extends JPanel{
 					}            		
 				} catch (Exception e) {
 					 System.out.println("Exception ok");
-					 JOptionPane.showMessageDialog(null, "­n¿é¤J¹CÀ¸¼ÊºÙ³á", "·ÅÄÉ´£¿ô@@?", JOptionPane.INFORMATION_MESSAGE);
+					 
+					 JOptionPane.showMessageDialog(null, "è¦è¼¸å…¥éŠæˆ²æš±ç¨±å–”", "æº«é¦¨æé†’@@?", JOptionPane.INFORMATION_MESSAGE);
 				}
 				
 			}
 		});    	
     	add(NewGame);
     	
-    	JButton JoinGame = new JButton("¥[¤J¹CÀ¸");
+    	JButton JoinGame = new JButton("åŠ å…¥éŠæˆ²");
     	JoinGame.setBounds(300,400,200,100);
     	JoinGame.setVisible(true);
     	JoinGame.addActionListener(new ActionListener() {			
@@ -88,7 +93,7 @@ public class IDView extends JPanel{
 					}            		
 				} catch (Exception e) {
 					 System.out.println("Exception ok");
-					 JOptionPane.showMessageDialog(null, "­n¿é¤J¹CÀ¸¼ÊºÙ³á", "·ÅÄÉ´£¿ô@@?", JOptionPane.INFORMATION_MESSAGE);
+					 JOptionPane.showMessageDialog(null, "è¦è¼¸å…¥éŠæˆ²æš±ç¨±å–”", "æº«é¦¨æé†’@@?", JOptionPane.INFORMATION_MESSAGE);
 				}
 				
 			}

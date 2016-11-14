@@ -28,9 +28,9 @@ public class LobbyView extends JPanel implements Observer{
         setLayout(null);          
        
 		
-		JLabel name1 = new JLabel("∂}©l",SwingConstants.CENTER);
+		JLabel name1 = new JLabel("ÈñãÂßã",SwingConstants.CENTER);
 		name1.setBounds(20,10,40,40);
-		JLabel name2 = new JLabel("πC¿∏",SwingConstants.CENTER);
+		JLabel name2 = new JLabel("ÈÅäÊà≤",SwingConstants.CENTER);
 		name2.setBounds(20,35,40,40);
 		
 		JButton StartGame = new JButton();
@@ -48,7 +48,7 @@ public class LobbyView extends JPanel implements Observer{
             }); 
     	add(StartGame);
     	
-    	JButton ComeBack = new JButton("™¶^");
+    	JButton ComeBack = new JButton("ËøîÂõû");
     	ComeBack.setBounds(660,400,80,80);
     	ComeBack.setVisible(true);
     	ComeBack.addMouseListener(new MouseAdapter() { 
@@ -64,36 +64,36 @@ public class LobbyView extends JPanel implements Observer{
             }); 
     	add(ComeBack);   	
         
-    	app_name = new JLabel("πC ¿∏ µ• ´› ´«");       
+    	app_name = new JLabel("ÈÅä Êà≤ Á≠â ÂæÖ ÂÆ§");       
     	app_name.setLocation(170, 30);    	
     	app_name.setSize(460,100);
-    	app_name.setFont(new Font("º–∑¢≈È", Font.BOLD, 60));
+    	app_name.setFont(new Font("Ê®ôÊ•∑È´î", Font.BOLD, 60));
     	add(app_name);
     	
-    	ServerInf = new JLabel("¶¯™Aæπ∏Í∞T",SwingConstants.CENTER);
+    	ServerInf = new JLabel("‰º∫ÊúçÂô®Ë≥áË®ä",SwingConstants.CENTER);
     	ServerInf.setBackground(new java.awt.Color(0,100,250));
     	ServerInf.setOpaque(true);
     	ServerInf.setLocation(550, 180);    	
     	ServerInf.setSize(210,40);    
-    	ServerInf.setFont(new Font("º–∑¢≈È", Font.BOLD, 20));
+    	ServerInf.setFont(new Font("Ê®ôÊ•∑È´î", Font.BOLD, 20));
     	ServerInf.setForeground(Color.white);;
     	add(ServerInf);
     	
-    	ShowServerIP = new JLabel("IP°G"+main_frame.client.getServerIP(),SwingConstants.CENTER);
+    	ShowServerIP = new JLabel("IPÔºö"+main_frame.client.getServerIP(),SwingConstants.CENTER);
     	ShowServerIP.setBackground(new java.awt.Color(0,100,250));
     	ShowServerIP.setOpaque(true);
     	ShowServerIP.setLocation(550, 220);    	
     	ShowServerIP.setSize(210,50);    
-    	ShowServerIP.setFont(new Font("º–∑¢≈È", Font.BOLD, 20));
+    	ShowServerIP.setFont(new Font("Ê®ôÊ•∑È´î", Font.BOLD, 20));
     	ShowServerIP.setForeground(Color.white);;
     	add(ShowServerIP);
     	
-    	ShowNumberOfPlayer = new JLabel("™±Æa§Hº∆°G1",SwingConstants.CENTER);
+    	ShowNumberOfPlayer = new JLabel("Áé©ÂÆ∂‰∫∫Êï∏Ôºö1",SwingConstants.CENTER);
     	ShowNumberOfPlayer.setBackground(new java.awt.Color(0,100,250));
     	ShowNumberOfPlayer.setOpaque(true);
     	ShowNumberOfPlayer.setLocation(550, 270);    	
     	ShowNumberOfPlayer.setSize(210,50);    
-    	ShowNumberOfPlayer.setFont(new Font("º–∑¢≈È", Font.BOLD, 20));
+    	ShowNumberOfPlayer.setFont(new Font("Ê®ôÊ•∑È´î", Font.BOLD, 20));
     	ShowNumberOfPlayer.setForeground(Color.white);;
     	add(ShowNumberOfPlayer);
     	
@@ -114,11 +114,11 @@ public class LobbyView extends JPanel implements Observer{
     		ShowPlayerList[i].setOpaque(true);
     		ShowPlayerList[i].setLocation(150, 180+40*i);    	
     		ShowPlayerList[i].setSize(300,40);    
-    		ShowPlayerList[i].setFont(new Font("º–∑¢≈È", Font.BOLD, 20));
+    		ShowPlayerList[i].setFont(new Font("Ê®ôÊ•∑È´î", Font.BOLD, 20));
     		ShowPlayerList[i].setForeground(Color.black);;
         	add(ShowPlayerList[i]);    		
     	}
-    	ShowPlayerList[0].setText("™±Æa¶C™Ì");
+    	ShowPlayerList[0].setText("Áé©ÂÆ∂ÂàóË°®");
     	
     	JButton GameRule = new JButton("?");
         GameRule.setLocation(700, 500);        
@@ -128,7 +128,7 @@ public class LobbyView extends JPanel implements Observer{
 			public void actionPerformed(ActionEvent me) {
 				int x = (int)main_frame.getLocation().getX();
 				int y = (int)main_frame.getLocation().getY();
-				GameRule GR = new GameRule(x,y);
+				GameRule gameRule = new GameRule(x,y,main_frame);
 			}
 		});
         add(GameRule);
@@ -151,7 +151,7 @@ public class LobbyView extends JPanel implements Observer{
 			for(int i =message.length;i<ShowPlayerList.length;i++){
 				ShowPlayerList[i].setText("");
 			}
-			ShowNumberOfPlayer.setText("™±Æa§Hº∆°G" + String.valueOf(playerNum));
+			ShowNumberOfPlayer.setText("Áé©ÂÆ∂‰∫∫Êï∏Ôºö" + String.valueOf(playerNum));
 		}    
     }	
 

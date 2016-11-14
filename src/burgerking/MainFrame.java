@@ -10,7 +10,7 @@ public class MainFrame extends JFrame{
 	TCPServer server;
 
 	public MainFrame(){
-		setTitle("ºÆ¨g°­§ì¤H");
+		setTitle("ç˜‹ç‹‚é¬¼æŠ“äºº");
        	setSize(805, 620);    	
     	setLayout(null); 
     	setResizable(false);

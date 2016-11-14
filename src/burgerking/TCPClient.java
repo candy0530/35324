@@ -16,50 +16,50 @@ public class TCPClient implements Subject , Runnable{
 	private String ServerIp = "127.0.0.1";
 	private final int ServerPort =35324;
 	private String ClientID = "USER1";
-	// «Ø¥ßSocketÅÜ¼Æ
+	// å»ºç«‹Socketè®Šæ•¸
 	private Socket mySocket;
 	InputStreamReader streamReader;
 	PrintStream writer;
 	
-	//Æ[¹îªÌ
+	//è§€å¯Ÿè€…
 	private ArrayList<Observer> observerList;
     
     private String message;
 
-	// «Ø¥ß³s½u
+	// å»ºç«‹é€£ç·š
 	public TCPClient(String serverIpAddress) {
 		ServerIp = serverIpAddress;
 		observerList = new ArrayList<Observer>();
 		try {
-			// ½Ğ¨D«Ø¥ß³s½u
+			// è«‹æ±‚å»ºç«‹é€£ç·š
 			mySocket = new Socket(ServerIp, ServerPort);
-			// «Ø¥ßI/O¸ê®Æ¬y¡A¨ú±oSocketªº¿é¤J¸ê®Æ¬y
+			// å»ºç«‹I/Oè³‡æ–™æµï¼Œå–å¾—Socketçš„è¼¸å…¥è³‡æ–™æµ
 			streamReader = new InputStreamReader(mySocket.getInputStream());
-			// ¨ú±oSocketªº¿é¥X¸ê®Æ¬y
+			// å–å¾—Socketçš„è¼¸å‡ºè³‡æ–™æµ
 			writer = new PrintStream(mySocket.getOutputStream());
-			//¶}±Ò°õ¦æºü
+			//é–‹å•ŸåŸ·è¡Œç·’
 			new Thread(this).start();		
 
 		} catch (IOException ex) {
-			System.out.println("Client«Ø¥ß³s½u¥¢±Ñ");
+			System.out.println("Clientå»ºç«‹é€£ç·šå¤±æ•—");
 		}
 	}
-	//Æ[¹îªÌµù¥U
+	//è§€å¯Ÿè€…è¨»å†Š
 	public void registOberserver(Observer observer){
         observerList.add(observer);
     }
-	//Æ[¹îªÌ²¾°£
+	//è§€å¯Ÿè€…ç§»é™¤
     public void removeOberserver(Observer observer){
         if(observerList.indexOf(observer)>-1)
         observerList.remove(observer);
     }
-    //°e³øµ¹©Ò¦³¤H
+    //é€å ±çµ¦æ‰€æœ‰äºº
     public void notifyAllOberserver(){
         for(Observer observer:observerList){
             observer.receiveNotify(this.message);
         }
     }
-    //°õ¦æ°e³ø
+    //åŸ·è¡Œé€å ±
     public class Notify implements Runnable {
 		InputStreamReader TCPReader;
 		
@@ -67,11 +67,11 @@ public class TCPClient implements Subject , Runnable{
 			notifyAllOberserver();
 		}
 	}
-	//³B²z¸ê®Æ¶Ç¶i¶Ç¥X		
+	//è™•ç†è³‡æ–™å‚³é€²å‚³å‡º		
 	public void run() {
 		String getLine;	
 		BufferedReader reader = new BufferedReader(streamReader);
-		// Åª¨ú¸ê®Æ
+		// è®€å–è³‡æ–™
 		try {	
 			
 			while ((getLine = reader.readLine()) != null) {
@@ -79,9 +79,9 @@ public class TCPClient implements Subject , Runnable{
 				System.out.println("TCP: "+getLine);
 				this.message = getLine;
 				
-				//°õ¦æ°e³ø
+				//åŸ·è¡Œé€å ±
 				Thread notify = new Thread(new Notify());
-				// ±Ò°Ê°õ¦æºü
+				// å•Ÿå‹•åŸ·è¡Œç·’
 				notify.start();			
 		        
 //				String[] serverText = getLine.split("#");
@@ -91,48 +91,48 @@ public class TCPClient implements Subject , Runnable{
 //				}//				
 				/*
 				 * 
-				 * ³B²zserver¶Ç¤Jªºinput
+				 * è™•ç†serverå‚³å…¥çš„input
 				 * 
 				 */	
 			}
 		} catch (Exception ex) {
 			/*try{
 				mySocket.close();
-				System.out.println("Ãö³¬clint¦¨¥\");
+				System.out.println("é—œé–‰clintæˆåŠŸ");
 			}catch (Exception eex) {
-				System.out.println("Ãö³¬clint¥¢±Ñ");
+				System.out.println("é—œé–‰clintå¤±æ•—");
 			}*/
 			//ex.printStackTrace();
-			System.out.println("°±¤î±qserverÅª¨ú");
+			System.out.println("åœæ­¢å¾serverè®€å–");
 		}
 	}
-	//¶Ç°Tµ¹Server
+	//å‚³è¨Šçµ¦Server
 	private void writeToServer(String outputMessage) {
 		try {
-			// °e¥X¸ê®Æ
+			// é€å‡ºè³‡æ–™
 			writer.println(outputMessage);
-			// ¨ê·s¸Ó¦ê¬yªº½w½Ä¡C
+			// åˆ·æ–°è©²ä¸²æµçš„ç·©è¡ã€‚
 			writer.flush();					
 							
 		} catch (Exception ex) {
-			System.out.println("¥¢±Ñ");
+			System.out.println("å¤±æ•—");
 		}
 	}
 	
 	
-	//¶i¤J©Ğ¶¡
+	//é€²å…¥æˆ¿é–“
 	public void enterRoom(String uID){
 		setID(uID);
 		/*
-		 * ³B²z­n¶Ç¥Xµ¹Serverªº«H®§
+		 * è™•ç†è¦å‚³å‡ºçµ¦Serverçš„ä¿¡æ¯
 		 */
 		String message = "ID#"+ClientID;			
 		writeToServer(message);
 		
 	}	
-	//¥«ªø¶}©l¹CÀ¸
+	//å¸‚é•·é–‹å§‹éŠæˆ²
 	public void setStartGame(){
-		// ³B²z­n¶Ç¥Xµ¹Serverªº«H®§		 
+		// è™•ç†è¦å‚³å‡ºçµ¦Serverçš„ä¿¡æ¯		 
 		String message = "StartGame#";			
 		writeToServer(message);
 	}
@@ -145,7 +145,7 @@ public class TCPClient implements Subject , Runnable{
 			{
 			serverIp =  InetAddress.getLocalHost().getHostAddress();//mySocket.getLocalAddress().toString().substring(1);
 			}catch (Exception ex) {
-				System.out.println("¨ú±oIP¥¢±Ñ");
+				System.out.println("å–å¾—IPå¤±æ•—");
 			}			
 		}
 		return serverIp;
@@ -156,13 +156,13 @@ public class TCPClient implements Subject , Runnable{
 		String message = "EndGame#";			
 		writeToServer(message);
 		try {
-			// µ²§ô³s½u			
+			// çµæŸé€£ç·š			
 			mySocket.close();		
 			streamReader.close();
 			writer.close();			
 			//System.out.println("End Connect");
 		} catch (IOException ex) {
-			System.out.println("µ²§ô³s½u¥¢±Ñ");
+			System.out.println("çµæŸé€£ç·šå¤±æ•—");
 		}
 	}
 	

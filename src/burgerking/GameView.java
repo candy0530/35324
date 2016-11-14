@@ -4,16 +4,11 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.sql.Time;
-import java.sql.Timestamp;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.management.remote.SubjectDelegationPermission;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.event.AncestorEvent;
-import javax.swing.event.AncestorListener;
 
 public class GameView extends JPanel{
 	
@@ -54,21 +49,21 @@ public class GameView extends JPanel{
         add(UserInfo);
         
 		task = new TimerTask() {  
-			    int time = 10;
+			    int time = 300;
 			    JLabel label = new JLabel();
 			    
 			    public void run(){
 			    	time--;
 			    	main_frame.MainPanel.requestFocus();
-					label.setText("πC¿∏≠Àº∆" + Integer.toString(time) + "¨Ì");
+					label.setText("ÈÅäÊà≤ÂÄíÊï∏" + Integer.toString(time) + "Áßí");
 					label.setBounds(10, 0, 230, 70);
-					label.setFont(new Font("º–∑¢≈È", Font.BOLD, 30));
+					label.setFont(new Font("Ê®ôÊ•∑È´î", Font.BOLD, 30));
 					label.setForeground(Color.RED);;
 					TimerPanel.add(label);
 					repaint();
 									
 					if(time == 270){
-						FirstGhostNew();
+						
 					}else if(time == 0){
 						task.cancel();
 						gameTimer.cancel();						
@@ -84,7 +79,21 @@ public class GameView extends JPanel{
 		
 		addKeyListener(new KeyAdapter() { 
             public void keyPressed(KeyEvent e)  { 
-                System.out.println("key pressed OK"); 
+            	
+            	if(e.getKeyCode() == 37)
+            		System.out.println("key left");
+            	else if(e.getKeyCode() == 38)
+                    System.out.println("key up"); 
+            	else if(e.getKeyCode() == 39)
+                    System.out.println("key right"); 
+            	else if(e.getKeyCode() == 40)
+                    System.out.println("key down");
+            	else if(e.getKeyCode() == 90)
+                    System.out.println("key z");
+            	else if(e.getKeyCode() == 88)
+                    System.out.println("key x");
+            	else 
+            		System.out.println(e.getKeyCode());
               } 
             });
 		
@@ -94,8 +103,6 @@ public class GameView extends JPanel{
 	}
 	
 
-	public void FirstGhostNew(){
-		
-	}
+
 
 }
