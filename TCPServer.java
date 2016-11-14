@@ -1,16 +1,18 @@
-﻿package EventDispatcher;
+package burgerking;
 
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
-public class TCPServer implements Runnable{	
+public class TCPServer implements Subject,Runnable{	
 	//存每個client的ID
 	private Hashtable clientIDList =new Hashtable();
 	//存每個clinet的outstream
@@ -18,7 +20,12 @@ public class TCPServer implements Runnable{
 	private final int port =35324;
 	private ServerSocket serverSock;
 	private Socket clientSocket;
+
+	InputStreamReader TCPReader;
 	
+	//觀察者
+	private ArrayList<Observer> observerList;
+	private String paperMessage;
 	//建立Server
 	public TCPServer() {
 		try {
@@ -26,7 +33,7 @@ public class TCPServer implements Runnable{
 			//開啟執行緒
 			new Thread(this).start();
 		}		catch (Exception ex) {
-			System.out.println("Server建立失敗");
+			System.out.println("[TCPServer] Server建立失敗");
 		}
 		
 	}	
@@ -47,6 +54,7 @@ public class TCPServer implements Runnable{
 				listenRequest.start();
 				
 			}catch (Exception ex) {
+				//ex.printStackTrace();
 				//System.out.println("Client要求連接失敗");
 			}
 		}
@@ -55,7 +63,7 @@ public class TCPServer implements Runnable{
 	public void endConnection() {
 		try {
 			// 結束連線			
-							
+			respondAll("ServerBreak#");				
 			//System.out.println("End Connect");
 			for(Enumeration<PrintStream> one =clientOutsteamList.elements();one.hasMoreElements();)
 			{	
@@ -63,21 +71,22 @@ public class TCPServer implements Runnable{
 				try{
 					((PrintStream)one.nextElement()).close();					
 									
-					System.out.println("Server關閉clintStream");
+					//System.out.println("[TCPServer] Server關閉clintStream");
 				}catch (Exception ex) {
-					System.out.println("關閉clint失敗: " );//+ ((Socket)one).getRemoteSocketAddress());
+					System.out.println("[TCPServer] 關閉clint失敗: " );//+ ((Socket)one).getRemoteSocketAddress());
 				}		
 				clientOutsteamList.remove(one);
 				//one.nextElement();							
 			}
+			TCPReader.close();
 			serverSock.close();
 		} catch (IOException ex) {
-			System.out.println("結束連線失敗");
+			System.out.println("[TCPServer] 結束連線失敗");
 		}
 	}
 	//與client傳輸信息的執行緒	
 	public class Process implements Runnable {
-		InputStreamReader TCPReader;
+		//InputStreamReader TCPReader;
 		
 		public void run() {
 			
@@ -91,7 +100,7 @@ public class TCPServer implements Runnable{
 				
 				// 讀取資料
 				while ((getLine = reader.readLine()) != null) {
-					//System.out.println(getLine);
+					System.out.println("[TCPServer] "+getLine);
 					//--處理input
 					String[] clientText = getLine.split("#");
 					//--client進入等候室 紀錄其ID且傳玩家列表給所有client
@@ -128,6 +137,7 @@ public class TCPServer implements Runnable{
 					
 				}
 			} catch (Exception ex) {
+				//ex.printStackTrace();
 				//System.out.println("連接離開: "+clientSocket.getRemoteSocketAddress() );
 			}
 			finally{
@@ -138,46 +148,76 @@ public class TCPServer implements Runnable{
 						clientIDList.remove(clientSocket);	
 				}				
 				synchronized(clientOutsteamList){
-					System.out.println("連接離開: "+clientSocket.getRemoteSocketAddress() );
+					System.out.println("[TCPServer] 連接離開: "+clientSocket.getRemoteSocketAddress() );
 					if(clientOutsteamList.containsKey(clientSocket))
 						clientOutsteamList.remove(clientSocket);
 					try{
 						clientSocket.close();
-						System.out.println("Server關閉clint成功");
+						//System.out.println("[TCPServer] Server關閉clint成功");
 					}catch (Exception ex) {
-						System.out.println("關閉clint失敗: " + clientSocket.getRemoteSocketAddress());
+						System.out.println("[TCPServer] 關閉clint失敗: " + clientSocket.getRemoteSocketAddress());
 					}
 				}
 				
 			}
 		}
-		//server回傳資料給本client
-		private void respondClient(PrintStream writer , String outputMessage) {			
-			try {				
-				
-				
-				writer.println(outputMessage);
-				// 刷新該串流的緩衝。
-				writer.flush();
-			} catch (Exception ex) {
-				System.out.println("送出資料失敗: "+ clientSocket.getRemoteSocketAddress());
-			}
 		
+		
+		
+	}
+	//觀察者註冊
+	public void registOberserver(Observer observer){
+        observerList.add(observer);
+    }
+	//觀察者移除
+    public void removeOberserver(Observer observer){
+        if(observerList.indexOf(observer)>-1)
+        observerList.remove(observer);
+    }
+    //送報給所有人
+    public void notifyAllOberserver(){
+        for(Observer observer:observerList){
+            observer.receiveNotify(this.paperMessage);
+        }
+    }
+    //執行送報
+    public class Notify implements Runnable {
+		InputStreamReader TCPReader;
+		
+		public void run() {
+			notifyAllOberserver();
 		}
-		//傳資料給所有client
-		private void respondAll(String outputMessage) {	
+	}
+	//server回傳資料給單一client
+	private void respondClient(PrintStream writer , String outputMessage) {			
+		try {	
+			writer.println(outputMessage);
+			// 刷新該串流的緩衝。
+			writer.flush();
+		} catch (Exception ex) {
+			System.out.println("送出資料失敗: "+ clientSocket.getRemoteSocketAddress());
+		}
+	
+	}
+	//傳資料給所有client
+	private void respondAll(String outputMessage) {	
+		
+		synchronized(clientOutsteamList){
 			
-			synchronized(clientOutsteamList){
-				
-				for(Enumeration one =clientOutsteamList.elements();one.hasMoreElements();)
-				{
-					PrintStream writer = (PrintStream)one.nextElement();
-					respondClient(writer , outputMessage);
-				}
+			for(Enumeration one =clientOutsteamList.elements();one.hasMoreElements();)
+			{
+				PrintStream writer = (PrintStream)one.nextElement();
+				respondClient(writer , outputMessage);
 			}
-			
 		}
 		
 	}
+	//當市長開始遊戲，通知所有clinet開始遊戲
+	public void setStartGame(){
+		// 處理要傳出給Server的信息		 
+		String message = "StartGame#";			
+		respondAll(message);
+	}
+	
 	
 }
