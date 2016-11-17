@@ -157,6 +157,13 @@ public class TCPServer implements Subject,Runnable{
 					}catch (Exception ex) {
 						System.out.println("[TCPServer] 關閉clint失敗: " + clientSocket.getRemoteSocketAddress());
 					}
+					String message = "List#";                      
+                    for(Enumeration one =clientIDList.elements();one.hasMoreElements();)
+                    {
+                        message += (String)one.nextElement()+"#";                           
+                    }
+                    //回傳信息給Client
+                    respondAll(message);
 				}
 				
 			}
