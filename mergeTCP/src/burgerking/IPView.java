@@ -63,7 +63,8 @@ public class IPView extends JPanel {
                     if (lobby_Ip_text.getText().equals("")) {
                         throw new Exception();
                     } else {
-                        main_frame.client = new TCPClient(lobby_Ip_text.getText());
+                        main_frame.client = new TCPClient();
+                        main_frame.client.connect(lobby_Ip_text.getText());
                         main_frame.changeView(new LobbyView(main_frame));
                         main_frame.client.enterRoom("USER2");
                     }

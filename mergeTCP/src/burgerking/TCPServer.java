@@ -20,14 +20,13 @@ public class TCPServer implements Subject,Runnable{
 	private final int port =35324;
 	private ServerSocket serverSock;
 	private Socket clientSocket;
-
 	InputStreamReader TCPReader;
 	
 	//觀察者
 	private ArrayList<Observer> observerList;
-	private String paperMessage;
+	private String observerMessage;
 	//建立Server
-	public TCPServer() {
+	public void connect() {
 		try {
 			serverSock = new ServerSocket(port);
 			//開啟執行緒
@@ -184,13 +183,11 @@ public class TCPServer implements Subject,Runnable{
     //送報給所有人
     public void notifyAllOberserver(){
         for(Observer observer:observerList){
-            observer.receiveNotify(this.paperMessage);
+            observer.receiveNotify(this.observerMessage);
         }
     }
     //執行送報
     public class Notify implements Runnable {
-		InputStreamReader TCPReader;
-		
 		public void run() {
 			notifyAllOberserver();
 		}

@@ -64,7 +64,9 @@ public class IDView extends JPanel {
                         throw new Exception();
                     } else {
                         main_frame.server = new TCPServer();
-                        main_frame.client = new TCPClient("127.0.0.1");
+                        main_frame.server.connect();
+                        main_frame.client = new TCPClient();
+                        main_frame.client.connect("127.0.0.1");
                         System.out.println("start game button 1 ok");
                         main_frame.changeView(new LobbyView(main_frame));
                         main_frame.client.enterRoom(user_ID_text.getText());

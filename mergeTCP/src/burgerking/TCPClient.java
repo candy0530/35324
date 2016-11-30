@@ -1,5 +1,6 @@
 package burgerking;
 
+import java.awt.geom.Point2D;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -24,7 +25,7 @@ public class TCPClient implements Subject, Runnable {
     private String message;
 
     // 建立連線
-    public TCPClient(String serverIpAddress) {
+    public void connect(String serverIpAddress) {
         ServerIp = serverIpAddress;
         observerList = new ArrayList<Observer>();
         try {
@@ -57,8 +58,7 @@ public class TCPClient implements Subject, Runnable {
             while ((getLine = reader.readLine()) != null) {
 
                 System.out.println("[TCPClient] " + getLine);
-                this.message = getLine;
-
+                setMessage(getLine);
                 // 執行送報
                 Thread notify = new Thread(new Notify());
                 // 啟動執行緒
@@ -103,14 +103,10 @@ public class TCPClient implements Subject, Runnable {
     private void setID(String ID) {
         ClientID = ID;
     }
-
     private void setMessage(String msg) {
-
-        this.message = msg;
-        ;
+        this.message = msg;        
 
     }
-
     // 觀察者註冊
     public void registOberserver(Observer observer) {
         observerList.add(observer);
@@ -124,25 +120,24 @@ public class TCPClient implements Subject, Runnable {
 
     // 送報給所有人
     public void notifyAllOberserver() {
-        for (Observer observer : observerList) {
-            observer.receiveNotify(this.message);
+        for (int i=0;i<observerList.size();i++) {
+            observerList.get(i).receiveNotify(this.message);
         }
     }
 
     // 執行送報
     public class Notify implements Runnable {
-        InputStreamReader TCPReader;
-
         public void run() {
             notifyAllOberserver();
         }
     }
-
+    
+    //sendUrgentData() 17次就結束 BAD
     public class NoticeServerOut implements Runnable {
         // InputStreamReader TCPReader;
 
         public void run() {
-            while (!mySocket.isClosed()) { // 怪怪的
+            while (!mySocket.isClosed()) {
 
                 try {
                     Thread.sleep(1000);
@@ -190,7 +185,6 @@ public class TCPClient implements Subject, Runnable {
             }
         }
         return serverIp;
-
     }
 
     public void endConnection() {
@@ -213,9 +207,13 @@ public class TCPClient implements Subject, Runnable {
         String message = "StartGame#";
         writeToServer(message);
     }
-
+    public void setDisplacement(Point2D point) {
+        // 處理要傳出給Server的信息
+        String message = "Displacement#"+point.getX()+"#"+point.getY();
+        writeToServer(message);
+    }
     // need?
-    public boolean isServer() {
+    public boolean isServer(){
         // System.out.println(mySocket.getLocalAddress()+",
         // "+mySocket.getInetAddress());
         if (mySocket.getLocalAddress().equals(mySocket.getInetAddress()))
