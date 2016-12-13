@@ -12,9 +12,9 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
-public class TCPServer implements Subject,Runnable{	
-	//存每個client的ID
-	private Hashtable clientIDList =new Hashtable();
+import burgerking.TCPClient.Notify;
+
+public class TCPServer implements Subject,Runnable{		
 	//存每個clinet的outstream
 	private Hashtable clientOutsteamList =new Hashtable();
 	private final int port =35324;
@@ -53,7 +53,6 @@ public class TCPServer implements Subject,Runnable{
 				listenRequest.start();
 				
 			}catch (Exception ex) {
-				//ex.printStackTrace();
 				//System.out.println("Client要求連接失敗");
 			}
 		}
@@ -104,34 +103,38 @@ public class TCPServer implements Subject,Runnable{
 					String[] clientText = getLine.split("#");
 					//--client進入等候室 紀錄其ID且傳玩家列表給所有client
 					if(clientText[0].equals("ID")){
-						clientIDList.put(clientSocket, clientText[1]);
 						//傳送玩家列表
-						String message = "List#";						
-						for(Enumeration one =clientIDList.elements();one.hasMoreElements();)
-						{
-							message += (String)one.nextElement()+"#";							
-						}
-						respondAll(message);
+						String message = "ListAdd#" + clientText[1]+ clientSocket.getInetAddress().getHostAddress();
+						setObserverMessage(message);
+						// 執行送報
+		                Thread notify = new Thread(new Notify());
+		                // 啟動執行緒
+		                notify.start();
 					}
-					else if(clientText[0].equals("EndGame")){
-						//處理output
-						clientIDList.remove(clientSocket);
+					else if(clientText[0].equals("Leave")){
+						//處理output						
 						clientOutsteamList.remove(clientSocket);
-						String message = "List#";						
-						for(Enumeration one =clientIDList.elements();one.hasMoreElements();)
-						{
-							message += (String)one.nextElement()+"#";							
-						}
-						//回傳信息給Client
-						respondAll(message);
+						String message = "ListRemove#"+ clientSocket.getInetAddress().getHostAddress();						
+						setObserverMessage(message);
+						// 執行送報
+		                Thread notify = new Thread(new Notify());
+		                // 啟動執行緒
+		                notify.start();
 					}
-					//--當市長開始遊戲，通知所有clinet開始遊戲
-					else if(clientText[0].equals("StartGame")){
-						//處理output
-						String message = "StartGame#";
-						//回傳信息給ALL
-						respondAll(message);
-					}				
+					else if(clientText[0].equals("Displacement")){
+					    setObserverMessage(getLine);
+					 // 執行送報
+		                Thread notify = new Thread(new Notify());
+		                // 啟動執行緒
+		                notify.start();					    
+					}
+//					//--當市長開始遊戲，通知所有clinet開始遊戲
+//					else if(clientText[0].equals("StartGame")){
+//						//處理output
+//						String message = "StartGame#";
+//						//回傳信息給ALL
+//						respondAll(message);
+//					}				
 					
 					
 				}
@@ -139,30 +142,23 @@ public class TCPServer implements Subject,Runnable{
 				//ex.printStackTrace();
 				//System.out.println("連接離開: "+clientSocket.getRemoteSocketAddress() );
 			}
-			finally{
-				
-				//移除client的ID.IP
-				synchronized(clientIDList){
-					if(clientIDList.containsKey(clientSocket))
-						clientIDList.remove(clientSocket);	
-				}				
+			finally{				
+								
 				synchronized(clientOutsteamList){
 					System.out.println("[TCPServer] 連接離開: "+clientSocket.getRemoteSocketAddress() );
 					if(clientOutsteamList.containsKey(clientSocket))
 						clientOutsteamList.remove(clientSocket);
+					String message = "ListRemove#"+ clientSocket.getInetAddress().getHostAddress();                        
+                    setObserverMessage(message);
+                    Thread notify = new Thread(new Notify());
+                    // 啟動執行緒
+                    notify.start();
 					try{
 						clientSocket.close();
 						//System.out.println("[TCPServer] Server關閉clint成功");
 					}catch (Exception ex) {
 						System.out.println("[TCPServer] 關閉clint失敗: " + clientSocket.getRemoteSocketAddress());
-					}
-					String message = "List#";                      
-                    for(Enumeration one =clientIDList.elements();one.hasMoreElements();)
-                    {
-                        message += (String)one.nextElement()+"#";                           
-                    }
-                    //回傳信息給Client
-                    respondAll(message);
+					}					
 				}
 				
 			}
@@ -181,10 +177,13 @@ public class TCPServer implements Subject,Runnable{
         observerList.remove(observer);
     }
     //送報給所有人
-    public void notifyAllOberserver(){
-        for(Observer observer:observerList){
-            observer.receiveNotify(this.observerMessage);
+    public void notifyAllOberserver() {
+        for (int i=0;i<observerList.size();i++) {
+            observerList.get(i).receiveNotify(this.observerMessage);
         }
+    }
+    private void setObserverMessage(String message){
+        this.observerMessage = message;
     }
     //執行送報
     public class Notify implements Runnable {
@@ -216,12 +215,33 @@ public class TCPServer implements Subject,Runnable{
 		}
 		
 	}
-	//當市長開始遊戲，通知所有clinet開始遊戲
-	public void setStartGame(){
-		// 處理要傳出給Server的信息		 
-		String message = "StartGame#";			
-		respondAll(message);
+	public void sendList(){
+	    
+	    String message ="List#";
+//	    message += Server.getList();
+	    respondAll(message);
 	}
-	
-	
+	public void sendInitList(String list){
+        
+        String message ="InitList#";
+//        message += list;
+        respondAll(message);
+    }
+	public void sendInitWalkable(String walkable){
+        
+        String message ="InitWalkable#";
+        message += walkable;
+        respondAll(message);
+    }
+	public void sendInitCoordinate(String coordinates){
+        
+        String message ="InitCoordinate#";
+        message += coordinates;
+        respondAll(message);
+    }
+	public void sendGameOver(){
+        
+        String message ="GameOver#";
+        respondAll(message);
+    }
 }

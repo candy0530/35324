@@ -14,7 +14,6 @@ public class TCPClient implements Subject, Runnable {
     // JLabel testLabel;
     private String ServerIp = "127.0.0.1";
     private final int ServerPort = 35324;
-    private String ClientID = "USER1";
     // 建立Socket變數
     private Socket mySocket;
     InputStreamReader streamReader;
@@ -63,17 +62,12 @@ public class TCPClient implements Subject, Runnable {
                 Thread notify = new Thread(new Notify());
                 // 啟動執行緒
                 notify.start();
-
-                // String[] serverText = getLine.split("#");
-                // if(serverText[0].equals("StartGame")){
-                // System.out.println("GO!");
-                // //testLabel.setText("GO!");
-                // }//
-                /*
-                 * 
-                 * 處理server傳入的input
-                 * 
-                 */
+//                 String[] serverText = getLine.split("#");
+//                 if(serverText[0].equals("StartGame")){
+//                 System.out.println("GO!");
+//                 //testLabel.setText("GO!");
+//                 }
+                
             }
         } catch (Exception ex) {
             /*
@@ -99,10 +93,7 @@ public class TCPClient implements Subject, Runnable {
             System.out.println("[TCPClient] 失敗");
         }
     }
-
-    private void setID(String ID) {
-        ClientID = ID;
-    }
+    
     private void setMessage(String msg) {
         this.message = msg;        
 
@@ -130,49 +121,14 @@ public class TCPClient implements Subject, Runnable {
         public void run() {
             notifyAllOberserver();
         }
-    }
-    
-    //sendUrgentData() 17次就結束 BAD
-    public class NoticeServerOut implements Runnable {
-        // InputStreamReader TCPReader;
-
-        public void run() {
-            while (!mySocket.isClosed()) {
-
-                try {
-                    Thread.sleep(1000);
-                    mySocket.sendUrgentData(1);
-                    System.out.println("[TCPClient] Server");
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    System.out.println("[TCPClient] Server已離開");
-                    setMessage("ServerBreak#");
-                    notifyAllOberserver();
-                    try {
-                        // 結束連線
-                        mySocket.close();
-                        streamReader.close();
-                        writer.close();
-                        // System.out.println("End Connect");
-                    } catch (IOException exx) {
-                        System.out.println("[TCPClient] 結束連線失敗");
-                    }
-                }
-            }
-
-        }
-
-    }
-
+    }  
     // 進入房間
-    public void enterRoom(String uID) {
-        setID(uID);
+    public void enterRoom(String uID) {        
         /*
          * 處理要傳出給Server的信息
          */
-        String message = "ID#" + ClientID;
+        String message = "ID#" + uID;
         writeToServer(message);
-
     }
 
     public String getServerIP() {
@@ -188,7 +144,7 @@ public class TCPClient implements Subject, Runnable {
     }
 
     public void endConnection() {
-        String message = "EndGame#";
+        String message = "Leave#";
         writeToServer(message);
         try {
             // 結束連線
@@ -200,18 +156,14 @@ public class TCPClient implements Subject, Runnable {
             System.out.println("[TCPClient] 結束連線失敗");
         }
     }
+    public void setDisplacement(String displace) {
+        // 處理要傳出給Server的信息
+        String message = "Displacement#" + displace;
+        writeToServer(message);
+    }
+    
+    
 
-    // 當市長開始遊戲，通知所有clinet開始遊戲
-    public void setStartGame() {
-        // 處理要傳出給Server的信息
-        String message = "StartGame#";
-        writeToServer(message);
-    }
-    public void setDisplacement(Point2D point) {
-        // 處理要傳出給Server的信息
-        String message = "Displacement#"+point.getX()+"#"+point.getY();
-        writeToServer(message);
-    }
     // need?
     public boolean isServer(){
         // System.out.println(mySocket.getLocalAddress()+",
@@ -221,5 +173,45 @@ public class TCPClient implements Subject, Runnable {
         else
             return false;
     }
+//  // 當市長開始遊戲，通知所有clinet開始遊戲
+//  public void setStartGame() {
+//      // 處理要傳出給Server的信息
+//      String message = "StartGame#";
+//      writeToServer(message);
+//  }
+    
+    
+//  //sendUrgentData() 17次就結束 BAD
+//  public class NoticeServerOut implements Runnable {
+//      // InputStreamReader TCPReader;
+//
+//      public void run() {
+//          while (!mySocket.isClosed()) {
+//
+//              try {
+//                  Thread.sleep(1000);
+//                  mySocket.sendUrgentData(1);
+//                  System.out.println("[TCPClient] Server");
+//              } catch (Exception ex) {
+//                  ex.printStackTrace();
+//                  System.out.println("[TCPClient] Server已離開");
+//                  setMessage("ServerBreak#");
+//                  notifyAllOberserver();
+//                  try {
+//                      // 結束連線
+//                      mySocket.close();
+//                      streamReader.close();
+//                      writer.close();
+//                      // System.out.println("End Connect");
+//                  } catch (IOException exx) {
+//                      System.out.println("[TCPClient] 結束連線失敗");
+//                  }
+//              }
+//          }
+//
+//      }
+//
+//  }  
+    
 
 }

@@ -46,7 +46,7 @@ public class LobbyView extends JPanel implements Observer {
             public void actionPerformed(ActionEvent me) {
                 System.out.println("StartGame button 1 ok");
                 // TCP加
-                main_frame.client.setStartGame();
+//                main_frame.client.setStartGame();
                 main_frame.changeView(new GameView(main_frame));
             }
         });
