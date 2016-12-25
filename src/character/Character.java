@@ -4,10 +4,12 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.time.Period;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.imageio.ImageIO;
-import javax.swing.JOptionPane;
 import datakit.Paintable;
 
 
@@ -30,7 +32,13 @@ public class Character implements Paintable{
 		for(int i=0; i< item.length ; i++){
 			item[i] = ItemCreator.getNewItem( this, (int)(Math.random()* ItemCreator.itemList.size()));
 		}
-	}	
+	}
+	
+	public Character( int id){
+	  
+	  this();
+	  this.setId( id);
+	}
 	
 	public Point getDisplacement() {
     return displacement;
@@ -61,16 +69,23 @@ public class Character implements Paintable{
 		this.speed = speed;
 	}
 
-	public void useItem(int number){
+	public void useItem( int number, Timer event){
+
+	  assert( number < itemNums ):"WTH with the item use?";
+	  assert( event == null ):"WTH with the event?";
 	  
-	  assert( number < itemNums):"WTH with the item use?";
 		if ( item[number] != null){
-		  item[number].use();
+		  item[number].use(event);
 		  item[number] = null;
 		}
 	}
 	
 	public BufferedImage getItemImg( int num){
+	  
+	  assert( num < itemNums ):"WTH with the item use?";
+	  if ( item[num] == null)
+	    return Item.img[0];
+	  
 	  return item[num].getImg();
 	}
 
@@ -110,7 +125,7 @@ abstract class Item implements Paintable{
 		this.owner = owner;
 	}
 
-	abstract void use();
+	abstract void use( Timer event);
 	
   @Override
   public void loadImg() {
@@ -134,11 +149,21 @@ class Booster extends Item{
 	}
 
 	@Override
-	void use() {
+	void use(Timer event) {
 		double speedEnhance = 1.2;
+		final long duration = 5000;
+		TimerTask endEffect = new TimerTask() {
+      
+      @Override
+      public void run() {
+        owner.setSpeed( owner.getSpeed() / speedEnhance);
+        //effect
+      }
+    };
+    
+    event.schedule( endEffect, duration);
 		
 		this.owner.setSpeed( this.owner.getSpeed() * speedEnhance);
-		// TODO stack a new speed recover event into timerTask
 	}
 }
 
@@ -150,8 +175,19 @@ class HyperBooster extends Item{
 	}
 
 	@Override
-	void use() {
+	void use(Timer event) {
 		int speedEnhance = 2;
+    final long duration = 3000;
+    TimerTask endEffect = new TimerTask() {
+      
+      @Override
+      public void run() {
+        owner.setSpeed( owner.getSpeed() / speedEnhance);
+        //effect
+      }
+    };
+    
+    event.schedule( endEffect, duration);
 		
 		this.owner.setSpeed( this.owner.getSpeed() * speedEnhance);
 //		TODO stack a new speed recover event into timerTask

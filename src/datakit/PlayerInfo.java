@@ -3,9 +3,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import EventDispatcher.Observer;;
 
 
-public class PlayerInfo extends LinkedList<Player> implements EventDispatcher.Observer{
+public class PlayerInfo extends LinkedList<Player> implements Observer{
 
   @Override
   public void receiveNotify(String msg) {
