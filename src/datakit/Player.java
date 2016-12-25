@@ -3,8 +3,8 @@ package datakit;
 public class Player {
 
 
-  final static public int buildParaNums = 3;
-  final static public int buildParaNumsNoBurger = 2;
+  final static public int ctorParaNums = 3;
+  final static public int ctorParaNumsNoBurger = 2;
   String name;
   String ip;
   int burger = 0;
