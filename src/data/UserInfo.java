@@ -1,8 +1,9 @@
-package datakit;
+package data;
+import character.Character;
 
 public class UserInfo {
 
-  String id;
+  int id;
   String ip;
   String name;
   Character character;
@@ -14,12 +15,12 @@ public class UserInfo {
   }
 
 
-  public String getId() {
+  public int getId() {
     return id;
   }
 
 
-  public void setId(String id) {
+  public void setId(int id) {
     this.id = id;
   }
 
@@ -42,6 +43,11 @@ public class UserInfo {
   public void setCharacter(Character character) {
     this.character = character;
   }
+
+
+public String getName() {
+    return name;
+}
   
   
 }

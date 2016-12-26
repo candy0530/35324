@@ -1,48 +1,42 @@
-package datakit;
+package data;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import EventDispatcher.Observer;;
+import background.Observer;
 
 
 public class PlayerInfo extends LinkedList<Player> implements Observer{
-  
-  
-  HashMap< String, MsgHandler> handlerMap;
-  
-  public PlayerInfo() {
-    
-    super();
-    handlerMap = new HashMap<>();
-    
-    HashMap< String, MsgHandler> handlerMap = new HashMap<>();
-    handlerMap.put( "List",new MsgHandler(){
-      @Override public void execute(List<String> msgs) { cmdList(msgs);} });
-    
-    handlerMap.put( "ListRemove", new MsgHandler(){
-      @Override public void execute(List<String> msgs) { cmdListRemove(msgs);} });
-    
-    handlerMap.put( "ListAdd", new MsgHandler() {
-      @Override public void execute(List<String> msgs) { cmdListAdd(msgs);} });    
-  }
 
   @Override
   public void receiveNotify(String msg) {
     // TODO Auto-generated method stub
     // lack of message formats.
+     //System.out.println("1123"+msg);
     List<String> msgs;
+    String[] headers = {"List","ListRemove","ListAdd"};
+    MsgHandler[] handler = new MsgHandler[]{
+        
+      new MsgHandler() {  @Override public void onGoing(List<String> msgs) { cmdList(msgs);} },
+      new MsgHandler() {  @Override public void onGoing(List<String> msgs) { cmdListRemove(msgs);} },
+      new MsgHandler() {  @Override public void onGoing(List<String> msgs) { cmdListAdd(msgs);} },
+    };
     
     msgs = new LinkedList<>( Arrays.asList(msg.split("#")));
     
-    MsgHandler handler = handlerMap.get( msgs.get(0));
-    msgs.remove(0);
-    handler.execute(msgs);     
+    for ( int i =0; i < headers.length; i++){
+      
+      if ( msgs.get(0).equals( headers[i])){
+        
+        msgs.remove(0);
+        handler[i].onGoing(msgs);
+        break;
+      }
+    }
     
   }
   
   interface MsgHandler{
-    void execute(List<String> msgs);
+    void onGoing(List<String> msgs);
   }
   
   void cmdList(List<String> msgs){
@@ -58,7 +52,6 @@ public class PlayerInfo extends LinkedList<Player> implements Observer{
   
   void cmdListRemove(List<String> msgs){
     
-    //compare with the player IP to determine the target.
     assert( msgs.size() == 1  ):"TCP !!!!";
     java.util.Iterator<Player> iterator = this.iterator();
     

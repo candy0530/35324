@@ -7,16 +7,16 @@ import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import datakit.Paintable;
+import data.Paintable;
 
 
 public class Character implements Paintable{
 
-	private Point coordinate;
-	private Point displacement;
-	private double speed;
-	private int id;
-	private Item[] item;
+	Point coordinate;
+	Point displacement;
+	double speed;
+	int id;
+	Item[] item;
 	boolean itemStatus[]; 
 	static private BufferedImage[] img;
 	
@@ -146,14 +146,14 @@ public class Character implements Paintable{
   public void loadImg() {
     
     String filePath[] = {
-        "cop.png",
-        "red.PNG",
-        "brown.PNG",
-        "yellow.PNG",
-        "green.PNG",
-        "blue.PNG",
-        "dark-blue.PNG",
-        "purple.PNG",
+        "image/cop.png",
+        "image/red.PNG",
+        "image/brown.PNG",
+        "image/yellow.PNG",
+        "image/green.PNG",
+        "image/blue.PNG",
+        "image/dark-blue.PNG",
+        "image/purple.PNG",
     };
     
     assert( filePath.length == 8):"Not the magic 8 characters.";
@@ -163,7 +163,10 @@ public class Character implements Paintable{
     for(int i=0; i < filePath.length; i++){
 
       img[i] = Paintable.loadOneImg(filePath[i], imgWidth, imgHeight);
-    }      
+    }
+    
+    assert( item[0] != null):"Item should have be loaded at this moment.";
+    item[0].loadImg();
   }
 
   @Override
@@ -180,7 +183,7 @@ abstract class Item implements Paintable{
 
 	Character owner;
 	int imageId;
-	long duration;
+	private long duration;
 	static BufferedImage[] img;
 	static final int imgHeight = 75;
 	static final int imgWidth = 75;
@@ -193,6 +196,10 @@ abstract class Item implements Paintable{
 	
 	public long getDuration(){
 	  return duration;
+	}
+	
+	void setDuration(long duration){
+	   this.duration = duration; 
 	}
 	
   @Override
@@ -215,7 +222,7 @@ abstract class Item implements Paintable{
       img[i] = Paintable.loadOneImg(filePath[i], imgWidth, imgHeight);
     }
     
-    img[0] = Paintable.getBlackImg(imgWidth, imgHeight);    
+    img[0] = Paintable.getBlackImg(imgWidth, imgHeight);
   }
 
   @Override
@@ -230,16 +237,18 @@ abstract class Item implements Paintable{
 }
 
 class Booster extends Item{
-		
+	
+    final long duration = 5000;
 	public Booster(Character owner) {
 		super(owner);
 		imageId = 1;
+		super.setDuration(this.duration);
 	}
 
 	@Override
 	void use(Timer event) {
 		double speedEnhance = 1.2;
-		final long duration = 5000;
+		
 		TimerTask endEffect = new TimerTask() {
       
       @Override
@@ -257,15 +266,17 @@ class Booster extends Item{
 
 class HyperBooster extends Item{
 	
+    final long duration = 3000;
 	public HyperBooster(Character owner) {
 		super(owner);
 		imageId = 2;
+		super.setDuration(this.duration);
 	}
 
 	@Override
 	void use(Timer event) {
 		int speedEnhance = 2;
-    final long duration = 3000;
+   
     TimerTask endEffect = new TimerTask() {
       
       @Override
