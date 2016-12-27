@@ -24,7 +24,6 @@ public class Map extends JPanel {
     private Point userLocation;
     private ArrayList<Point> emptyGrid;     //record no burger location
     private Point[] PlayerInit;             //record player initial
-    private MapPicture mapPicture;
     public Map(int playerNum) {        
         
         this.playerNum = playerNum;
@@ -42,6 +41,7 @@ public class Map extends JPanel {
         userLocation = new Point((int) mapSize*unitMapSize/ 2, (int) mapSize*unitMapSize / 2);          //set the initial location
         
         //Avoid error
+        new MapDetail().loadImg();
         map = new MapDetail[mapSize][mapSize];
         for(int i=0; i<mapSize; i++) {
             for(int j=0; j<mapSize; j++) {
@@ -49,7 +49,6 @@ public class Map extends JPanel {
                 map[i][j].setWalkable(false);
             }
         }
-        mapPicture = new MapPicture();
         
         
 //        // setting background

@@ -35,6 +35,10 @@ public class MapDetail implements Paintable{
     public boolean getBurger() {
         return burger;
     }
+    
+    public void setBurger(boolean burger) {
+      this.burger = burger;
+  }
 
     public void setWalkable(boolean walkable) {
       
