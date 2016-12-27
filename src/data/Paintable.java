@@ -23,11 +23,7 @@ public interface Paintable {
       BufferedImage img = ImageIO.read(file);
       if ( img.getHeight() != imgHeight || img.getWidth() != imgWidth){
         
-        BufferedImage newImg = new BufferedImage(imgWidth, imgHeight, img.getType());
-        Graphics g = newImg.getGraphics();
-        g.drawImage(img, 0, 0, imgWidth, imgHeight, null);
-        img = newImg;
-        g.dispose();        
+        scaleImg(img, imgWidth, imgHeight);
       }
       
       return img;
@@ -49,4 +45,14 @@ public interface Paintable {
     return img;
   }
 
+  static BufferedImage scaleImg( BufferedImage img, int imgWidth, int imgHeight) {
+
+    BufferedImage newImg = new BufferedImage(imgWidth, imgHeight, img.getType());
+    Graphics g = newImg.getGraphics();
+    g.drawImage(img, 0, 0, imgWidth, imgHeight, null);
+    img = newImg;
+    g.dispose();
+
+    return newImg;
+  }
 }
