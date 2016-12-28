@@ -19,7 +19,7 @@ public class Map extends JPanel {
     private int mapSize;
     private int playerNum;
     
-    private final int mapBonder = 6;
+    private final int mapBorder = 6;
     private final int unitMapSize = 60; // setting unit of map size = 60 pixel
     
     private final int mapViewSize = 9;
@@ -179,7 +179,7 @@ public class Map extends JPanel {
         for (int i = 0; i < mapSize; i++) {
             for (int j = 0; j < mapSize; j++) {
                 try {
-                    if ((i < mapBonder) || (j < mapBonder) || (i >= mapSize - mapBonder) || (j >= mapSize - mapBonder)) {
+                    if ((i < mapBorder) || (j < mapBorder) || (i >= mapSize - mapBorder) || (j >= mapSize - mapBorder)) {
                         map[i][j].setWalkable(false);
                     } else {
                         map[i][j].setWalkable(true);
@@ -194,7 +194,12 @@ public class Map extends JPanel {
         
        
         // setting obstacle
-        setObstacle();
+        if(Math.random() > 0.5) {
+            setObstacle();            
+        }
+        else {
+            setObstacle3();
+        }
         
         //set the max Burger number
         maxBurger = emptyGrid.size() - playerNum;
@@ -228,8 +233,8 @@ public class Map extends JPanel {
     
     //set Obstacle　1 space
     private void setObstacle() {
-        for (int j = 1 + mapBonder; j < mapSize - mapBonder-1; j += (1+1)) {
-            for (int i = 1 + mapBonder; i < mapSize - 1 - mapBonder; i++) {
+        for (int j = 1 + mapBorder; j < mapSize - mapBorder-1; j += (1+1)) {
+            for (int i = 1 + mapBorder; i < mapSize - 1 - mapBorder; i++) {
                 if (Math.random() > 0.4) {
                     try {
                         map[i][j].setWalkable(false);
@@ -246,9 +251,9 @@ public class Map extends JPanel {
     
   //set Obstacle　2 space
     private void setObstacle2() {
-        for (int j = 1 + mapBonder; j < mapSize - mapBonder-1; j += (1+2)) {
+        for (int j = 1 + mapBorder; j < mapSize - mapBorder-1; j += (1+2)) {
             int counterWalkable = 0;
-            for (int i = 1 + mapBonder; i < mapSize - 1 - mapBonder; i++) {
+            for (int i = 1 + mapBorder; i < mapSize - 1 - mapBorder; i++) {
                 if (Math.random() > 0.4 && counterWalkable != (2-1)) {
                     try {    
                         System.out.println("Counter Walkable: " + counterWalkable);
@@ -269,10 +274,10 @@ public class Map extends JPanel {
     
     private void setObstacle3() {
         double[] rand = {0.4, 0.6, 0.8};
-        for (int j = 1 + mapBonder; j < mapSize - mapBonder-1; j++) {
+        for (int j = 1 + mapBorder; j < mapSize - mapBorder-1; j++) {
             int counterWalkable = 0;
-            for (int i = 1 + mapBonder; i < mapSize - 1 - mapBonder; i++) {
-                if(map[i][j-2].getWalkable()) {
+            for (int i = 1 + mapBorder; i < mapSize - 1 - mapBorder; i++) {
+                if(map[i][j-2].getWalkable() || j == 1+mapBorder) {
                     if (Math.random() > rand[j%3] && counterWalkable != (2-1)) {
                         try {    
                             System.out.print("0");
@@ -534,6 +539,11 @@ public class Map extends JPanel {
     public boolean isWalkable(Point point){
     	Point gridLocation = getGridLocation(point.x, point.y); 
     	return map[gridLocation.x][gridLocation.y].getWalkable();
+    }
+    
+    public Point getWalkable(Point point) {
+        Point gridLocation = getGridLocation(point.x, point.y); 
+        return getPixelLocation(gridLocation);
     }
 
     public void eatBurger(int x, int y) {
