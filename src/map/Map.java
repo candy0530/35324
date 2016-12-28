@@ -8,11 +8,14 @@ import java.util.Collections;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import org.w3c.dom.css.Counter;
+
 public class Map extends JPanel {
 
 	private MapDetail[][] map;
 
-
+	private int maxBurger = 1000;
+	    
     private int mapSize;
     private int playerNum;
     
@@ -20,7 +23,7 @@ public class Map extends JPanel {
     private final int unitMapSize = 60; // setting unit of map size = 60 pixel
     
     private final int mapViewSize = 9;
-
+    
     private Point userLocation;
     private ArrayList<Point> emptyGrid;     //record no burger location
     private Point[] PlayerInit;             //record player initial
@@ -35,7 +38,7 @@ public class Map extends JPanel {
         }
         else {
             this.mapSize = 37;
-            showOptionPane((int)(Math.random()*11));
+//            showOptionPane((int)(Math.random()*11));
         }
         
         userLocation = new Point((int) mapSize*unitMapSize/ 2, (int) mapSize*unitMapSize / 2);          //set the initial location
@@ -188,22 +191,13 @@ public class Map extends JPanel {
                 }
             }
         }
-//        map[5][5].setWalkable(true);
-
+        
+       
         // setting obstacle
-        for (int i = 1 + mapBonder; i < mapSize - 1 - mapBonder; i++) {
-            for (int j = 1 + mapBonder; j < mapSize - mapBonder; j += 2) {
-                if (Math.random() > 0.6) {
-                    try {
-                        map[i][j].setWalkable(false);
-                        emptyGrid.remove(new Point(i, j));                        
-                    }
-                    catch (Exception e) {
-                        System.out.println("(Map)mapGenerator() map["+i+"]["+j+"].setWalkable is wrong. (setting obstacle)");
-                    }
-                }
-            }
-        }
+        setObstacle();
+        
+        //set the max Burger number
+        maxBurger = emptyGrid.size() - playerNum;
         
         //random the walkable
         Collections.shuffle(emptyGrid);
@@ -227,6 +221,86 @@ public class Map extends JPanel {
             PlayerInit[i+1] = getPixelLocation(emptyGrid.get(i));
 //            System.out.println("Player initial");
 //        	System.out.println("x= " + PlayerInit[i+1].getX() + "; y= " + PlayerInit[i+1].getY());
+        }
+        
+//        System.out.println("(Map)getMaxBurger() is " + getMaxBurger());
+    }
+    
+    //set Obstacle¡@2 space
+    private void setObstacle() {
+        for (int j = 1 + mapBonder; j < mapSize - mapBonder-1; j += (1+1)) {
+            int counterWalkable = 0;
+            for (int i = 1 + mapBonder; i < mapSize - 1 - mapBonder; i++) {
+                if (Math.random() > 0.4 && counterWalkable != (1-1)) {
+                    try {    
+                        System.out.println("Counter Walkable: " + counterWalkable);
+                        map[i][j].setWalkable(false);
+                        emptyGrid.remove(new Point(i, j));
+                        counterWalkable = 0;
+                    }
+                    catch (Exception e) {
+                        System.out.println("(Map)mapGenerator() map["+i+"]["+j+"].setWalkable is wrong. (setting obstacle)");
+                    }
+                }
+                else {
+                    counterWalkable++;
+                }
+            }
+        }
+    }
+    
+  //set Obstacle¡@2 space
+    private void setObstacle2() {
+        for (int j = 1 + mapBonder; j < mapSize - mapBonder-1; j += (1+2)) {
+            int counterWalkable = 0;
+            for (int i = 1 + mapBonder; i < mapSize - 1 - mapBonder; i++) {
+                if (Math.random() > 0.4 && counterWalkable != (2-1)) {
+                    try {    
+                        System.out.println("Counter Walkable: " + counterWalkable);
+                        map[i][j].setWalkable(false);
+                        emptyGrid.remove(new Point(i, j));
+                        counterWalkable = 0;
+                    }
+                    catch (Exception e) {
+                        System.out.println("(Map)mapGenerator() map["+i+"]["+j+"].setWalkable is wrong. (setting obstacle)");
+                    }
+                }
+                else {
+                    counterWalkable++;
+                }
+            }
+        }
+    }
+    
+    private void setObstacle3() {
+        double[] rand = {0.4, 0.6, 0.8};
+        for (int j = 1 + mapBonder; j < mapSize - mapBonder-1; j++) {
+            int counterWalkable = 0;
+            for (int i = 1 + mapBonder; i < mapSize - 1 - mapBonder; i++) {
+                if(map[i][j-2].getWalkable()) {
+                    if (Math.random() > rand[j%3] && counterWalkable != (2-1)) {
+                        try {    
+                            System.out.print("0");
+                             map[i][j].setWalkable(false);
+                            emptyGrid.remove(new Point(i, j));
+                            counterWalkable = 0;
+                        }
+                        catch (Exception e) {
+                            System.out.println("(Map)mapGenerator() map["+i+"]["+j+"].setWalkable is wrong. (setting obstacle)");
+                        }
+                    }
+                    else {
+                        counterWalkable++;
+                        System.out.print(" ");
+                    }                        
+                }
+                else {
+                    counterWalkable++;
+                    System.out.print(" ");
+                }
+            }
+            
+            System.out.println("");
         }
     }
     
@@ -511,4 +585,9 @@ public class Map extends JPanel {
         this.userLocation = getGridLocation(point);
         repaint();
     }
+    
+    public int getMaxBurger(){
+        return maxBurger;
+    }
 }
+

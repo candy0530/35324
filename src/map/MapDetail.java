@@ -15,7 +15,7 @@ public class MapDetail implements Paintable{
     private boolean walkable;
     private boolean burger = false;
     private BufferedImage walkablePicture;
-   
+//    private BufferedImage burgerPicture;
     
     private static BufferedImage[] bgImg;
     private static BufferedImage[] blockImg;
@@ -79,10 +79,10 @@ public class MapDetail implements Paintable{
       BufferedImage texture = loadTexturePack();
       loadBurgerImg();
       
-      Point[] bg = { new Point(0, 0), new Point(1, 0), new Point(2, 0), };     
+      Point[] bg = { new Point(0, 0), new Point(1, 0), new Point(2, 0)/*, new Point(3, 0),*/ };     
       Point[] block = {
           null,
-          new Point(0,34), new Point(1,34), new Point(2,34), new Point(1,40),
+          new Point(0,34), new Point(1,34), new Point(2,34), /*new Point(5,34),*/ new Point(1,40),
       };
       
       assert bg.length == bgTypes: "Check the bg loaded numbers.";
@@ -91,15 +91,15 @@ public class MapDetail implements Paintable{
       
       for ( int i = 0; i < bg.length; i++){
         
-        bgImg[i] = Paintable.scaleImg( 
-            texture.getSubimage(bg[i].x *imgSize, bg[i].y *imgSize, imgSize, imgSize),
+        bgImg[i] = Paintable.scaleImg(  
+            texture.getSubimage(bg[i].x*imgSize, bg[i].y*imgSize, imgSize, imgSize),
             imgWidth, imgHeight
             );
       }
       
       for ( int i = 1; i < block.length; i++){
         blockImg[i] = Paintable.scaleImg( 
-            texture.getSubimage(block[i].x *imgSize, block[i].y *imgSize, imgSize, imgSize),
+            texture.getSubimage(block[i].x*imgSize, block[i].y*imgSize, imgSize, imgSize),
             imgWidth, imgHeight
             );
       }
