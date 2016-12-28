@@ -79,10 +79,10 @@ public class MapDetail implements Paintable{
       BufferedImage texture = loadTexturePack();
       loadBurgerImg();
       
-      Point[] bg = { new Point(0, 0), new Point(0, 1), new Point(0, 2), };     
+      Point[] bg = { new Point(0, 0), new Point(1, 0), new Point(2, 0), };     
       Point[] block = {
           null,
-          new Point(34,0), new Point(34,1), new Point(34,2), new Point(40,1),
+          new Point(0,34), new Point(1,34), new Point(2,34), new Point(1,40),
       };
       
       assert bg.length == bgTypes: "Check the bg loaded numbers.";
