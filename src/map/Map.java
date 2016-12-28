@@ -226,30 +226,25 @@ public class Map extends JPanel {
 //        System.out.println("(Map)getMaxBurger() is " + getMaxBurger());
     }
     
-    //set Obstacle¡@2 space
+    //set Obstacleã€€1 space
     private void setObstacle() {
         for (int j = 1 + mapBonder; j < mapSize - mapBonder-1; j += (1+1)) {
-            int counterWalkable = 0;
             for (int i = 1 + mapBonder; i < mapSize - 1 - mapBonder; i++) {
-                if (Math.random() > 0.4 && counterWalkable != (1-1)) {
-                    try {    
-                        System.out.println("Counter Walkable: " + counterWalkable);
+                if (Math.random() > 0.4) {
+                    try {
                         map[i][j].setWalkable(false);
                         emptyGrid.remove(new Point(i, j));
-                        counterWalkable = 0;
+                        
                     }
                     catch (Exception e) {
                         System.out.println("(Map)mapGenerator() map["+i+"]["+j+"].setWalkable is wrong. (setting obstacle)");
                     }
                 }
-                else {
-                    counterWalkable++;
-                }
             }
         }
     }
     
-  //set Obstacle¡@2 space
+  //set Obstacleã€€2 space
     private void setObstacle2() {
         for (int j = 1 + mapBonder; j < mapSize - mapBonder-1; j += (1+2)) {
             int counterWalkable = 0;
