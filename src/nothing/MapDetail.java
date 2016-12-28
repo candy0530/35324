@@ -1,4 +1,4 @@
-package map;
+package nothing;
 
 import java.awt.Graphics;
 import java.awt.Point;
@@ -15,7 +15,7 @@ public class MapDetail implements Paintable{
     private boolean walkable;
     private boolean burger = false;
     private BufferedImage walkablePicture;
-   
+    private BufferedImage burgerPicture;
     
     private static BufferedImage[] bgImg;
     private static BufferedImage[] blockImg;
@@ -48,9 +48,6 @@ public class MapDetail implements Paintable{
         //the last block type is preserve for some special case.
         blockId = 1 + (int)( Math.random() * (blockTypes -1));
       }
-      else{
-          blockId = 0;
-      }
     }
     
     public void setBlockId(int blockId) {
@@ -67,7 +64,7 @@ public class MapDetail implements Paintable{
 
     public BufferedImage getBurgerPicture() {
         if (burger)
-          return burgerImg;
+          return getBurgerImg();
         
         return null;
     }

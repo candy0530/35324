@@ -21,8 +21,8 @@ public class Character implements Paintable{
 	static private BufferedImage[] img;
 	
 	final static int itemNums = 2;
-	static final int imgHeight = 90;
-	static final int imgWidth = 60;
+	public static final int imgHeight = 240;
+	public static final int imgWidth = 240;
 	
 	public Character(){
 //		coordinate.setLocation(1, 1);
