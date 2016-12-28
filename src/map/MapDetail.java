@@ -15,7 +15,7 @@ public class MapDetail implements Paintable{
     private boolean walkable;
     private boolean burger = false;
     private BufferedImage walkablePicture;
-    private BufferedImage burgerPicture;
+   
     
     private static BufferedImage[] bgImg;
     private static BufferedImage[] blockImg;
@@ -25,8 +25,8 @@ public class MapDetail implements Paintable{
     
     final static int imgWidth = 60;
     final static int imgHeight = 60;
-    final static int bgTypes = 4;
-    final static int blockTypes = 5;
+    final static int bgTypes = 3;
+    final static int blockTypes = 4;
     
     public MapDetail() {
         bgId = (int)( Math.random() * bgTypes);
@@ -48,6 +48,9 @@ public class MapDetail implements Paintable{
         //the last block type is preserve for some special case.
         blockId = 1 + (int)( Math.random() * (blockTypes -1));
       }
+      else{
+          blockId = 0;
+      }
     }
     
     public void setBlockId(int blockId) {
@@ -64,7 +67,7 @@ public class MapDetail implements Paintable{
 
     public BufferedImage getBurgerPicture() {
         if (burger)
-          return burgerPicture;
+          return burgerImg;
         
         return null;
     }
@@ -76,10 +79,10 @@ public class MapDetail implements Paintable{
       BufferedImage texture = loadTexturePack();
       loadBurgerImg();
       
-      Point[] bg = { new Point(0, 0), new Point(0, 1), new Point(0, 2), new Point(0, 3), };     
+      Point[] bg = { new Point(0, 0), new Point(1, 0), new Point(2, 0)/*, new Point(3, 0),*/ };     
       Point[] block = {
           null,
-          new Point(34,0), new Point(34,1), new Point(34,2), new Point(34,5), new Point(40,1),
+          new Point(0,34), new Point(1,34), new Point(2,34), /*new Point(5,34),*/ new Point(1,40),
       };
       
       assert bg.length == bgTypes: "Check the bg loaded numbers.";
@@ -88,18 +91,19 @@ public class MapDetail implements Paintable{
       
       for ( int i = 0; i < bg.length; i++){
         
-        bgImg[i] = Paintable.scaleImg( 
-            texture.getSubimage(bg[i].x, bg[i].y, imgSize, imgSize),
+        bgImg[i] = Paintable.scaleImg(  
+            texture.getSubimage(bg[i].x*imgSize, bg[i].y*imgSize, imgSize, imgSize),
             imgWidth, imgHeight
             );
       }
       
       for ( int i = 1; i < block.length; i++){
         blockImg[i] = Paintable.scaleImg( 
-            texture.getSubimage(block[i].x, bg[i].y, imgSize, imgSize),
+            texture.getSubimage(block[i].x*imgSize, block[i].y*imgSize, imgSize, imgSize),
             imgWidth, imgHeight
             );
       }
+      
     }
 
     @Override
