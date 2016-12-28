@@ -23,7 +23,7 @@ public interface Paintable {
       BufferedImage img = ImageIO.read(file);
       if ( img.getHeight() != imgHeight || img.getWidth() != imgWidth){
         
-        scaleImg(img, imgWidth, imgHeight);
+        img = scaleImg(img, imgWidth, imgHeight);
       }
       
       return img;
