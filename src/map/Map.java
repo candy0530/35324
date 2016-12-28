@@ -531,21 +531,25 @@ public class Map extends JPanel {
     
 	// to check collision
     public boolean isBurger(Point point){
-        Point gridLocation = getGridLocation(point.x, point.y); 
-        return map[gridLocation.x][gridLocation.y].getBurger();
-        
+        Point gridLocation = getGridLocation(point.x, point.y);
+        try {
+            return map[gridLocation.x][gridLocation.y].getBurger();    
+        }
+        catch (Exception e) {
+            return false;
+        }
     }
  
     public boolean isWalkable(Point point){
     	Point gridLocation = getGridLocation(point.x, point.y); 
-    	return map[gridLocation.x][gridLocation.y].getWalkable();
+    	try {
+    	    return map[gridLocation.x][gridLocation.y].getWalkable();    	    
+    	}
+    	catch (Exception e) {
+            return false;
+        }
     }
     
-    public Point getWalkable(Point point) {
-        Point gridLocation = getGridLocation(point.x, point.y); 
-        return getPixelLocation(gridLocation);
-    }
-
     public void eatBurger(int x, int y) {
         Point gridLocation = getGridLocation(x, y); 
         map[gridLocation.x][gridLocation.y].setBurger(false);
