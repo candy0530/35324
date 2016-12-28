@@ -22,6 +22,7 @@ public class MapDetail implements Paintable{
     private static BufferedImage burgerImg;
     private int bgId = 0;
     private int blockId = 0;
+    public double burgerDegree = 0;
     
     final static int imgWidth = 60;
     final static int imgHeight = 60;

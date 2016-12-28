@@ -152,8 +152,11 @@ public class Map extends JPanel {
                     g.drawImage(
 							map[i + tempX][j + tempY].getBurgerPicture(),
                             ((i+tempX)*unitMapSize)-(int)changeLocation.getX(),
-                            ((j+tempY)*unitMapSize)-(int)changeLocation.getY(),                         
+                            ((j+tempY)*unitMapSize)-(int)changeLocation.getY() + (int)(4.2 *Math.cos( Math.toRadians( map[i + tempX][j + tempY].burgerDegree))),                        
                             unitMapSize, unitMapSize, null);
+                    
+                    map[i + tempX][j + tempY].burgerDegree += 4;
+                    map[i + tempX][j + tempY].burgerDegree %= 360;
         	    }
         	    catch (Exception ex){
         	        System.out.println("Map Error!!");  
