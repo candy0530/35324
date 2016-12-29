@@ -148,9 +148,9 @@ public class Map extends JPanel {
                             ((j+tempY)*unitMapSize)-(int)changeLocation.getY(),                         
                             unitMapSize, unitMapSize, null);
 							
-                    // draw burger
+        	        // draw burger
                     g.drawImage(
-							map[i + tempX][j + tempY].getBurgerPicture(),
+                            map[i + tempX][j + tempY].getBurgerPicture(),
                             ((i+tempX)*unitMapSize)-(int)changeLocation.getX(),
                             ((j+tempY)*unitMapSize)-(int)changeLocation.getY() + (int)(4.2 *Math.cos( Math.toRadians( map[i + tempX][j + tempY].burgerDegree))),                        
                             unitMapSize, unitMapSize, null);
@@ -234,7 +234,7 @@ public class Map extends JPanel {
 //        System.out.println("(Map)getMaxBurger() is " + getMaxBurger());
     }
     
-    //set Obstacleã€€1 space
+    //set Obstacle¡@1 space
     private void setObstacle() {
         for (int j = 1 + mapBorder; j < mapSize - mapBorder-1; j += (1+1)) {
             for (int i = 1 + mapBorder; i < mapSize - 1 - mapBorder; i++) {
@@ -252,7 +252,7 @@ public class Map extends JPanel {
         }
     }
     
-  //set Obstacleã€€2 space
+  //set Obstacle¡@2 space
     private void setObstacle2() {
         for (int j = 1 + mapBorder; j < mapSize - mapBorder-1; j += (1+2)) {
             int counterWalkable = 0;
@@ -275,6 +275,18 @@ public class Map extends JPanel {
         }
     }
     
+    
+    // if map have the space, the space size must bigger than one space 
+    // we don't allow the only one space in the map  
+    // first rule: ("1" is obstacle, "0" is walkable)
+    // 1001 is allowed; 1011 is not allowed 
+    // (column can not allow only one space)
+    //
+    // Second rule:
+    // 1111                 11111
+    // 0000                 00000
+    // 0000   is allowed    11111   is not allowed
+    // (row can not allow only one space)
     private void setObstacle3() {
         double[] rand = {0.4, 0.6, 0.8};
         for (int j = 1 + mapBorder; j < mapSize - mapBorder-1; j++) {
@@ -600,6 +612,10 @@ public class Map extends JPanel {
     
     public int getMaxBurger(){
         return maxBurger;
+    }
+    
+    public int getMapSize() {
+        return mapSize;
     }
 }
 
