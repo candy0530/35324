@@ -8,6 +8,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import data.Paintable;
+import sound.EffectPlayer;
+import sound.SoundPlayer;
 
 
 public class Character implements Paintable{
@@ -255,12 +257,16 @@ class Booster extends Item{
       public void run() {
         owner.setSpeed( owner.getSpeed() / speedEnhance);
         //effect
+        EffectPlayer effectPlayer = new EffectPlayer("sound/itemEnd.mp3");
+        effectPlayer.start();
       }
     };
     
     event.schedule( endEffect, duration);
 		
 		this.owner.setSpeed( this.owner.getSpeed() * speedEnhance);
+    EffectPlayer effectPlayer = new EffectPlayer("sound/item1.mp3");
+    effectPlayer.start();
 	}
 }
 
@@ -283,13 +289,17 @@ class HyperBooster extends Item{
       public void run() {
         owner.setSpeed( owner.getSpeed() / speedEnhance);
         //effect
+        EffectPlayer effectPlayer = new EffectPlayer("sound/itemEnd.mp3");
+        effectPlayer.start();
       }
     };
     
     event.schedule( endEffect, duration);
 		
 		this.owner.setSpeed( this.owner.getSpeed() * speedEnhance);
-//		TODO stack a new speed recover event into timerTask
+    EffectPlayer effectPlayer = new EffectPlayer("sound/item2.mp3");
+    effectPlayer.start();
+
 	}
 }
 

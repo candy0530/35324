@@ -2,10 +2,14 @@ package foreground;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -24,6 +28,8 @@ public class LobbyView extends JPanel implements Observer {
     private JButton startGameButton;
     SoundPlayer bgm;
 
+    Background2 backgroundLabel2;
+    Background backgroundLabel;
 
     public LobbyView(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
@@ -35,21 +41,15 @@ public class LobbyView extends JPanel implements Observer {
         bgm = new SoundPlayer("sound/lobbyBGM.mp3", true);
         bgm.start();
 
-        JLabel name1 = new JLabel("開始", SwingConstants.CENTER);
-        name1.setBounds(20, 10, 40, 40);
-        JLabel name2 = new JLabel("遊戲", SwingConstants.CENTER);
-        name2.setBounds(20, 35, 40, 40);
-
-        startGameButton = new JButton();
-        startGameButton.setLayout(null);
-        startGameButton.add(name1);
-        startGameButton.add(name2);
+        startGameButton = new JButton("<html>開始<br>遊戲</html>");
+        startGameButton.setFont(new Font("標楷體", Font.BOLD, 20));
         startGameButton.setBounds(550, 400, 80, 80);
         startGameButton.setVisible(true);
         startGameButton.addActionListener(startGameActionListener);
         add(startGameButton);
 
         JButton comeBackButton = new JButton("返回");
+        comeBackButton.setFont(new Font("標楷體", Font.BOLD, 20));
         comeBackButton.setBounds(660, 400, 80, 80);
         comeBackButton.setVisible(true);
         comeBackButton.addActionListener(comeBackActionListener);
@@ -64,7 +64,12 @@ public class LobbyView extends JPanel implements Observer {
         serverInfo.setForeground(Color.white);
         add(serverInfo);
 
-        showServerIP = new JLabel("IP：" + mainFrame.getTCPClient().getServerIP(), SwingConstants.CENTER);
+        try {
+          showServerIP = new JLabel("IP：" + mainFrame.getTCPClient().getServerIP(), SwingConstants.CENTER);
+        } catch (Exception e) {
+          bgm.close();
+          throw e;
+        }
         showServerIP.setBackground(new java.awt.Color(0, 100, 250));
         showServerIP.setOpaque(true);
         showServerIP.setLocation(550, 220);
@@ -99,7 +104,57 @@ public class LobbyView extends JPanel implements Observer {
         }
         showPlayerList[0].setText("玩家列表");
 
-        JLabel backgroundLabel = new Background();               
+        
+        backgroundLabel2 = new Background2();
+        backgroundLabel = new Background();
+        
+        JLabel button= new JLabel();
+        button.setSize(50, 50);
+        button.setLocation(0, 550);
+        button.addMouseListener(
+            new MouseListener() {
+              
+              @Override
+              public void mouseReleased(MouseEvent e) {}             
+              @Override
+              public void mousePressed(MouseEvent e) {}              
+              @Override
+              public void mouseExited(MouseEvent e) {}        
+              @Override
+              public void mouseEntered(MouseEvent e) {}
+              
+              @Override
+              public void mouseClicked(MouseEvent e) {
+                mainFrame.background = !mainFrame.background;
+                if(mainFrame.background){
+                  backgroundLabel2.setIcon(null);
+                  backgroundLabel.setIcon(new ImageIcon("image/background.png"));
+                  repaint();                  
+                }
+                else {
+                  backgroundLabel2.setIcon(new ImageIcon(new ImageIcon("image/title2.png").getImage().getScaledInstance(195, 130, Image.SCALE_DEFAULT)));
+                  backgroundLabel.setIcon(new ImageIcon("image/background5.png"));
+                  repaint();
+                }
+              }
+            });
+        
+        add(button);
+
+        if(mainFrame.background){
+          backgroundLabel2.setIcon(null);
+          backgroundLabel.setIcon(new ImageIcon("image/background.png"));
+          repaint();                  
+        }
+        else {
+          backgroundLabel2.setIcon(new ImageIcon(new ImageIcon("image/title2.png").getImage().getScaledInstance(195, 130, Image.SCALE_DEFAULT)));
+          backgroundLabel.setIcon(new ImageIcon("image/background5.png"));
+          repaint();
+        }
+        
+        add(backgroundLabel2); 
+        add(backgroundLabel);
+        
         mainFrame.enterRoom();       
         
         mainFrame.getTCPClient().registOberserver(this); 

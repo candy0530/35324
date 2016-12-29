@@ -6,6 +6,8 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.net.InetAddress;
 
 import javax.swing.BorderFactory;
@@ -46,6 +48,9 @@ public class RankView extends JPanel {
             { 0, 255, 0 }, { 0, 127, 255 }, { 0, 0, 255 }, { 139, 0, 255 } };
     private final Font fontStyle = new Font("Serif", Font.BOLD, 20);
     private final Border borderStyle = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
+    
+    Background2 backgroundLabel2;
+    Background backgroundLabel;
     SoundPlayer bgm;
     
     public RankView(MainFrame mainFrame) {        
@@ -63,6 +68,7 @@ public class RankView extends JPanel {
         //setting Background
         for(int i=0; i<showPlayerRank.length; i++) {
             showPlayerRank[i] = new JPanel();
+            showPlayerRank[i].setLayout(null);
             showPlayerRank[i].setBackground(new java.awt.Color(PlayerListColorTable[i][0],
                   PlayerListColorTable[i][1], PlayerListColorTable[i][2]));
             showPlayerRank[i].setLocation(170, 140 + height * i);
@@ -222,7 +228,54 @@ public class RankView extends JPanel {
         });
         add(exitGame);
         
-        JLabel backgroundLabel = new Background();
+        backgroundLabel2 = new Background2();
+        backgroundLabel = new Background();
+        
+        JLabel button= new JLabel();
+        button.setSize(50, 50);
+        button.setLocation(0, 550);
+        button.addMouseListener(
+            new MouseListener() {
+              
+              @Override
+              public void mouseReleased(MouseEvent e) {}             
+              @Override
+              public void mousePressed(MouseEvent e) {}              
+              @Override
+              public void mouseExited(MouseEvent e) {}        
+              @Override
+              public void mouseEntered(MouseEvent e) {}
+              
+              @Override
+              public void mouseClicked(MouseEvent e) {
+                mainFrame.background = !mainFrame.background;
+                if(mainFrame.background){
+                  backgroundLabel2.setIcon(null);
+                  backgroundLabel.setIcon(new ImageIcon("image/background.png"));
+                  repaint();                  
+                }
+                else {
+                  backgroundLabel2.setIcon(new ImageIcon(new ImageIcon("image/title2.png").getImage().getScaledInstance(195, 130, Image.SCALE_DEFAULT)));
+                  backgroundLabel.setIcon(new ImageIcon("image/background5.png"));
+                  repaint();
+                }
+              }
+            });
+        
+        add(button);
+
+        if(mainFrame.background){
+          backgroundLabel2.setIcon(null);
+          backgroundLabel.setIcon(new ImageIcon("image/background.png"));
+          repaint();                  
+        }
+        else {
+          backgroundLabel2.setIcon(new ImageIcon(new ImageIcon("image/title2.png").getImage().getScaledInstance(195, 130, Image.SCALE_DEFAULT)));
+          backgroundLabel.setIcon(new ImageIcon("image/background5.png"));
+          repaint();
+        }
+        
+        add(backgroundLabel2); 
         add(backgroundLabel);
         
         EffectPlayer effectSound = new EffectPlayer("sound/rank.mp3");

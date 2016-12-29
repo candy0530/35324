@@ -38,7 +38,7 @@ public class MainFrame extends JFrame {
     public UserInfo userInfo = null;
     public PlayerInfo playerInfo;
     private int userNum;
-
+    public boolean background = false;
 
     public MainFrame() {
         setTitle("瘋狂鬼抓人");

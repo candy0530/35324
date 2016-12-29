@@ -76,7 +76,7 @@ public class GameRule implements ActionListener {
         descriptionScrollBar.addAdjustmentListener(new AdjustmentListener() {
             @Override
             public void adjustmentValueChanged(AdjustmentEvent e) {
-                System.out.println(e.getValue());
+                //System.out.println(e.getValue());
 
                 descriptionPanel.setBounds(0, -e.getValue(), 921, 2127);
             }

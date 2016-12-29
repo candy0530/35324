@@ -6,7 +6,7 @@ import javax.swing.JLabel;
 public class Background extends JLabel {
 
     public Background() {
-        ImageIcon background = new ImageIcon("image/background.png");
+        ImageIcon background = new ImageIcon("image/background5.png");
         setIcon(background);
         setLocation(0, 0);
         setSize(800, 600);
