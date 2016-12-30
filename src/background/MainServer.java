@@ -153,11 +153,14 @@ public class MainServer implements Observer{
                 int minburgreplayerID = 0;
                 for (int i = 0; i < playerInfo.size(); i++) {
                     if((playerInfo.get(i).getBurger() < playerInfo.get(minburgreplayerID).getBurger())&&
-                         (record[i+1].getCoordinate().x != (map.getPrison().x+60)&&
-                         record[i+1].getCoordinate().y != (map.getPrison().y+60)))
+                         (record[i+1].getCoordinate().x != (map.getSpace().x)&&
+                         record[i+1].getCoordinate().y != map.getSpace().y))
                         minburgreplayerID = i;
                 }
-                
+                if(characters[minburgreplayerID+1].getCoordinate().x < 0){
+                    gameover();
+                    return;
+                }
                 int Burger = playerInfo.get(minburgreplayerID).getBurger();
                 setGhost(minburgreplayerID,Burger);
                 /*
@@ -329,7 +332,7 @@ public class MainServer implements Observer{
                 if(message[1].equals(playerInfo.get(i).getIp()))
                 {
                     
-                    characters[i+1].setCoordinate(new Point(map.getPrison().x+60,map.getPrison().y)); 
+                    characters[i+1].setCoordinate(map.getSpace()); 
                     int burger = playerInfo.get(i).getBurger();
                     map.setSpreadBurger(burger);
                     playerInfo.get(i).setBurger(0);
