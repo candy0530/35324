@@ -320,10 +320,12 @@ public class Map extends JPanel {
     }
     
     private Point changeCoordinate(Point point) {
+        // unit is pixel 
     	Point temp = new Point(point.x, point.y);
     	temp.translate((int)(-unitMapSize*4.5), (int)(-unitMapSize*4.5));
     	if(temp.x < 0  || temp.y < 0) {
-    	    System.out.println("(Map)changeCoordinate have error.");
+//    	    System.out.println("(Map)changeCoordinate have error.");
+    	    return new Point(0, 0);
     	}    
     	return temp;
     }
@@ -454,38 +456,47 @@ public class Map extends JPanel {
         Point changeLocation = changeCoordinate(playerLocation);
         //printPoint(changeLocation);
         
-        //test the changeLocation weather over Range
-        if (changeLocation.x >= 0 && changeLocation.y >= 0) {
-            int tempX = (int)changeLocation.getX()/unitMapSize;
-            int tempY = (int)changeLocation.getY()/unitMapSize;
-            
-            for(int y=0; y<mapViewSize+1; y++) {
-                for(int x=0; x<mapViewSize+1; x++) {
-                    try {
-                        if(tempX+x < mapSize && tempY+y < mapSize) {
-                            if(map[tempX+x][tempY+y].getBurger()) {
-                                tempViewBurger += "1";
-                            }
-                            else {
+        try {
+            //test the changeLocation weather over Range
+            if (changeLocation.x >= 0 && changeLocation.y >= 0) {
+                int tempX = (int)changeLocation.getX()/unitMapSize;
+                int tempY = (int)changeLocation.getY()/unitMapSize;
+                
+                for(int y=0; y<mapViewSize+1; y++) {
+                    for(int x=0; x<mapViewSize+1; x++) {
+                        try {
+                            if(tempX+x < mapSize && tempY+y < mapSize) {
+                                if(map[tempX+x][tempY+y].getBurger()) {
+                                    tempViewBurger += "1";
+                                }
+                                else {
+                                    tempViewBurger += "0";
+                                }                        
+                            }else {
                                 tempViewBurger += "0";
                             }                        
-                        }else {
-                            tempViewBurger += "0";
-                        }                        
-                    }
-                    catch (Exception e) {
-                        System.out.println("(Map)getViewBurgerString is over Range.");
+                        }
+                        catch (Exception e) {
+                            System.out.println("(Map)getViewBurgerString is over Range.");
+                        }
                     }
                 }
             }
-        }
-        else {
-            //System.out.println("(Map)getViewBurgerString playerLocation is wrong.");
-        }
+            else {
+                //System.out.println("(Map)getViewBurgerString playerLocation is wrong.");
+            }
 //        System.out.println("ViewBurger:");
 //        System.out.println(tempViewBurger);
-        
-        return tempViewBurger;
+            return tempViewBurger;            
+        }        
+        catch (Exception e)  {
+            String temp = "";
+            for(int i=0; i<100; i++) {
+                temp += "0";
+            }
+            return temp;
+        }
+       
     }
     
     public void setViewBurger(boolean[] burger, Point playerLocation) {
@@ -510,23 +521,29 @@ public class Map extends JPanel {
             
             int tempX = changeLocation.x / unitMapSize;
             int tempY = changeLocation.y / unitMapSize;
-//            double time = System.currentTimeMillis();
-            for(int y=0; y<mapViewSize+1; y++) {
-                for(int x=0; x<mapViewSize+1; x++) {
-                    try {
-                        if(tempX+x < mapSize && tempY+y < mapSize) {
-                            if(tempBurger[y*(mapViewSize+1)+x] == '1') {
-                                map[tempX + x][tempY + y].setBurger(true);                    
-                            }
-                            else{
-                                map[tempX + x][tempY + y].setBurger(false);
+            
+            try {
+   
+    //            double time = System.currentTimeMillis();
+                for(int y=0; y<mapViewSize+1; y++) {
+                    for(int x=0; x<mapViewSize+1; x++) {
+                        try {
+                            if(tempX+x < mapSize && tempY+y < mapSize) {
+                                if(tempBurger[y*(mapViewSize+1)+x] == '1') {
+                                    map[tempX + x][tempY + y].setBurger(true);                    
+                                }
+                                else{
+                                    map[tempX + x][tempY + y].setBurger(false);
+                                }                    
                             }                    
-                        }                    
-                    }
-                    catch (Exception e) {
-                        System.out.println("(Map)setViewBurgerString is over Range");
+                        }
+                        catch (Exception e) {
+                            System.out.println("(Map)setViewBurgerString is over Range");
+                        }
                     }
                 }
+            } catch (Exception e) {
+//                System.out.println("(Map)setViewBurgerString is error");
             }
 //            System.out.println("(Map)setViewBurger time = " + (System.currentTimeMillis() - time));
             repaint();
