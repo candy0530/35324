@@ -634,5 +634,9 @@ public class Map extends JPanel {
     public int getMapSize() {
         return mapSize;
     }
+    
+    public Point getSpace() {
+        return getPixelLocation(new Point(-10, -10));
+    }
 }
 
